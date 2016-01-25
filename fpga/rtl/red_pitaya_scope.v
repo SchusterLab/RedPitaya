@@ -217,9 +217,12 @@ wire              avg_mode      ;   //1 if averaging mode
 reg               adc_avg_do    ;   //1 while averaging
 reg   [  18-1: 0] adc_avg_cnt   ;   //hw averaging counter
 reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
+reg               adc_trigged   ;   //0 when scope is reset; 1 if scope has ever been triggered
 
-reg               adc_trigged   ;   //debugging to see if it started writing
 reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
+
+reg   [  32-1: 0] rw_reg_test   ;   //test-writing R/W register
+reg   [  32-1: 0] ronly_reg_test  ; //test-writing R only register
 
 assign npt_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then must be in no pre-trigger mode
 assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mode
@@ -238,7 +241,7 @@ always @(posedge adc_clk_i) begin
       adc_avg_cnt <= 18'h0      ;
       adc_avg_do  <=  1'b0      ;
 
-      adc_trigged <=  1'b0      ;
+      adc_trigged <=  1'b0      ;  // scope is reset at positive edge of every clock cycle?
       t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0; t5 <= 1'b0;
    end
    else begin
@@ -868,7 +871,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd20                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd21                              ; end   //Version #
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -876,13 +879,15 @@ end else begin
                                                                                 adc_avg_do
 
                                                                                         }           ; end
-     20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, adc_avg_cnt}
+     20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, adc_avg_cnt}        ; end
+     20'h000BC : begin sys_ack <= sys_en;          sys_rdata <= rw_reg_test                         ; end
+     20'h0000C : begin sys_ack <= sys_en;          sys_rdata <= ronly_reg_test                      ; end
 
      20'h1???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= {16'h0, 2'h0,adc_a_rd}              ; end
      20'h2???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= {16'h0, 2'h0,adc_b_rd}              ; end
 
-     20'h3zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_a                    ; end
-     20'h4zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_b                    ; end
+     20'h30000 : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_a                    ; end
+     20'h40000 : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_b                    ; end
 
        default : begin sys_ack <= sys_en;          sys_rdata <=  32'h0                              ; end
    endcase

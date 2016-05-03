@@ -355,9 +355,9 @@ assign adc_b = digital_loop ? dac_b : {adc_dat_b[14-1], ~adc_dat_b[14-2:0]};
 // DAC IO
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sumation of ASG and PID signal perform saturation before sending to DAC 
-assign dac_a_sum = asg_a + pid_a;
-assign dac_b_sum = asg_b + pid_b;
+// Summation of ASG and PID signal perform saturation before sending to DAC 
+assign dac_a_sum = asg_a; //+ pid_a;
+assign dac_b_sum = asg_b; //+ pid_b;
 
 // saturation
 assign dac_a = (^dac_a_sum[15-1:15-2]) ? {dac_a_sum[15-1], {13{~dac_a_sum[15-1]}}} : dac_a_sum[14-1:0];
@@ -471,27 +471,27 @@ red_pitaya_asg i_asg (
   .sys_ack         (  sys_ack[2]                 )   // acknowledge signal
 );
 
-//---------------------------------------------------------------------------------
-//  MIMO PID controller
+// //---------------------------------------------------------------------------------
+// //  MIMO PID controller
 
-red_pitaya_pid i_pid (
-   // signals
-  .clk_i           (  adc_clk                    ),  // clock
-  .rstn_i          (  adc_rstn                   ),  // reset - active low
-  .dat_a_i         (  adc_a                      ),  // in 1
-  .dat_b_i         (  adc_b                      ),  // in 2
-  .dat_a_o         (  pid_a                      ),  // out 1
-  .dat_b_o         (  pid_b                      ),  // out 2
-  // System bus
-  .sys_addr        (  sys_addr                   ),  // address
-  .sys_wdata       (  sys_wdata                  ),  // write data
-  .sys_sel         (  sys_sel                    ),  // write byte select
-  .sys_wen         (  sys_wen[3]                 ),  // write enable
-  .sys_ren         (  sys_ren[3]                 ),  // read enable
-  .sys_rdata       (  sys_rdata[ 3*32+31: 3*32]  ),  // read data
-  .sys_err         (  sys_err[3]                 ),  // error indicator
-  .sys_ack         (  sys_ack[3]                 )   // acknowledge signal
-);
+// red_pitaya_pid i_pid (
+//    // signals
+//   .clk_i           (  adc_clk                    ),  // clock
+//   .rstn_i          (  adc_rstn                   ),  // reset - active low
+//   .dat_a_i         (  adc_a                      ),  // in 1
+//   .dat_b_i         (  adc_b                      ),  // in 2
+//   .dat_a_o         (  pid_a                      ),  // out 1
+//   .dat_b_o         (  pid_b                      ),  // out 2
+//   // System bus
+//   .sys_addr        (  sys_addr                   ),  // address
+//   .sys_wdata       (  sys_wdata                  ),  // write data
+//   .sys_sel         (  sys_sel                    ),  // write byte select
+//   .sys_wen         (  sys_wen[3]                 ),  // write enable
+//   .sys_ren         (  sys_ren[3]                 ),  // read enable
+//   .sys_rdata       (  sys_rdata[ 3*32+31: 3*32]  ),  // read data
+//   .sys_err         (  sys_err[3]                 ),  // error indicator
+//   .sys_ack         (  sys_ack[3]                 )   // acknowledge signal
+// );
 
 //---------------------------------------------------------------------------------
 //  Analog mixed signals

@@ -194,7 +194,7 @@ reg   [  32-1: 0] adc_a_rd      ;   //current adc_a value from adc_a_buf at requ
 reg   [  32-1: 0] adc_b_rd      ;   //current adc_b value from adc_b_buf at requested location
 reg   [  32-1: 0] adc_a_buf_tmp ;   //tmp reg for pipelining
 reg   [  32-1: 0] adc_b_buf_tmp ;   //
-reg   [ RSZ-1: 0] adc_wp        ;   //adc write pointer within adc_x_buf
+reg   [  32-1: 0] adc_wp        ;   //adc write pointer within adc_x_buf
 reg   [ RSZ-1: 0] adc_raddr     ;   //adc read address in within adc_x_buf (requested via sys_addr)
 reg   [ RSZ-1: 0] adc_a_raddr   ;   //copy of adc_raddr (I think delayed by one cycle?)
 reg   [ RSZ-1: 0] adc_b_raddr   ;   //copy of adc_raddr (I think delayed by one cycle?)
@@ -204,8 +204,8 @@ reg               adc_we        ;   //adc write enable
 reg               adc_we_keep   ;   //I think this is actually unused...it gets written from sys_bus
 reg               adc_trig      ;   //adc trigger bit (set from trigger code below)
 
-reg   [ RSZ-1: 0] adc_wp_trig   ;   //write pointer at when triggered
-reg   [ RSZ-1: 0] adc_wp_cur    ;   //Current write pointer
+reg   [  32-1: 0] adc_wp_trig   ;   //write pointer at when triggered
+reg   [  32-1: 0] adc_wp_cur    ;   //Current write pointer
 reg   [  32-1: 0] set_dly       ;   //delay count (# of samples from bus)
 reg   [  32-1: 0] adc_we_cnt    ;   //counter of how many samples written before trigger
 reg   [  32-1: 0] adc_dly_cnt   ;   //counter which counts from set_dly to 0
@@ -218,6 +218,12 @@ reg               adc_avg_do    ;   //1 while averaging
 reg   [  18-1: 0] adc_avg_cnt   ;   //hw averaging counter
 reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
 
+reg               ss_mode       ;   //1 if single shot mode
+reg   [  32-1: 0] ss_shot_ptr   ;   //Number of triggers since experiment started
+reg   [  32-1: 0] ss_read_ptr   ;   //Number of results readout from memory
+reg               ss_overflow   ;   //1 if there has been overflow (ss_shot_ptr-ss_read_ptr > 2**RSZ)
+
+
 reg               adc_trigged   ;   //debugging to see if it started writing
 reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
 
@@ -228,10 +234,10 @@ assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mod
 // Write
 always @(posedge adc_clk_i) begin
    if (adc_rstn_i == 1'b0) begin
-      adc_wp      <= {RSZ{1'b0}};
+      adc_wp      <= 32'h0      ;
       adc_we      <=  1'b0      ;
-      adc_wp_trig <= {RSZ{1'b0}};
-      adc_wp_cur  <= {RSZ{1'b0}};
+      adc_wp_trig <= 32'h0      ;
+      adc_wp_cur  <= 32'h0      ;
       adc_we_cnt  <= 32'h0      ;
       adc_dly_cnt <= 32'h0      ;
       adc_dly_do  <=  1'b0      ;
@@ -282,13 +288,13 @@ always @(posedge adc_clk_i) begin
          adc_wp <= adc_wp + 1;              // advance write pointer
 
       if (adc_rst_do)
-         adc_wp_trig <= {RSZ{1'b0}};
+         adc_wp_trig <= 32'h0;
       else if (adc_trig && !adc_dly_do)
          adc_wp_trig <= adc_wp_cur ;        // save write pointer at trigger arrival
 
       
       if (adc_rst_do || !adc_we)
-         adc_wp_cur <= {RSZ{1'b0}};
+         adc_wp_cur <= 32'h0;
       else if (adc_we && adc_dv)
          adc_wp_cur <= adc_wp ;             // save current write pointer
 
@@ -307,17 +313,17 @@ always @(posedge adc_clk_i) begin
 end
 
 always @(posedge adc_clk_i) begin
-   adc_a_buf_tmp <= adc_a_buf[adc_wp];
-   adc_b_buf_tmp <= adc_b_buf[adc_wp];
+   adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
+   adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
    if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
       t2 <= 1'b1;      
-      adc_a_buf[adc_wp_cur] <= $signed(32'd0)+$signed(adc_a_dat) ;
-      adc_b_buf[adc_wp_cur] <= $signed(32'd0)+$signed(adc_b_dat) ;
+      adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
+      adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
    end 
    else if (adc_we && adc_dv && avg_mode) begin
        t3 <= 1'b1;
-       adc_a_buf[adc_wp_cur] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
-       adc_b_buf[adc_wp_cur] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
+       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
+       adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
    end
 end
 
@@ -335,22 +341,22 @@ always @(posedge adc_clk_i) begin
    adc_raddr   <= sys_addr[RSZ+1:2] ; // address synchronous to clock
    adc_a_raddr <= adc_raddr     ; // double register 
    adc_b_raddr <= adc_raddr     ; // otherwise memory corruption at reading
-   adc_a_rd    <= adc_a_buf[adc_a_raddr] ;
-   adc_b_rd    <= adc_b_buf[adc_b_raddr] ;
+   adc_a_rd    <= adc_a_buf[adc_a_raddr[RSZ-1:0]] ;
+   adc_b_rd    <= adc_b_buf[adc_b_raddr[RSZ-1:0]] ;
 end
 
 //---------------------------------------------------------------------------------
 //  Hardware accumulate
 //  Added by DS
 
-reg  [ 32-1: 0]   adc_a_score   ;
-reg  [ 32-1: 0]   adc_b_score   ;
+reg  [ 48-1: 0]   adc_a_score   ;
+reg  [ 48-1: 0]   adc_b_score   ;
 reg  [ RSZ-1: 0]  win_start, win_stop;
 
 always @(posedge adc_clk_i)
 if (adc_rstn_i == 1'b0) begin
-  adc_a_score   <= 32'h0 ;
-  adc_b_score   <= 32'h0 ;
+  adc_a_score   <= 48'h0 ;
+  adc_b_score   <= 48'h0 ;
 end else begin
     adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
     adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;
@@ -787,6 +793,7 @@ end else begin
       if (sys_addr[19:0]==20'h20)   set_a_hyst    <= sys_wdata[14-1:0] ;
       if (sys_addr[19:0]==20'h24)   set_b_hyst    <= sys_wdata[14-1:0] ;
       if (sys_addr[19:0]==20'h28)   set_avg_en    <= sys_wdata[     0] ;
+      if (sys_addr[19:0]==20'h28)   ss_mode       <= sys_wdata[     1] ;
 
       if (sys_addr[19:0]==20'h30)   set_a_filt_aa <= sys_wdata[18-1:0] ;
       if (sys_addr[19:0]==20'h34)   set_a_filt_bb <= sys_wdata[25-1:0] ;
@@ -842,7 +849,8 @@ end else begin
      20'h00020 : begin sys_ack <= sys_en;          sys_rdata <= {{32-14{1'b0}}, set_a_hyst}         ; end
      20'h00024 : begin sys_ack <= sys_en;          sys_rdata <= {{32-14{1'b0}}, set_b_hyst}         ; end
 
-     20'h00028 : begin sys_ack <= sys_en;          sys_rdata <= {{32- 1{1'b0}}, set_avg_en}         ; end
+     20'h00028 : begin sys_ack <= sys_en;          sys_rdata <= {{32- 2{1'b0}}, ss_mode, 
+                                                                                set_avg_en}         ; end
 
      20'h0002C : begin sys_ack <= sys_en;          sys_rdata <=                 adc_we_cnt          ; end
 
@@ -872,7 +880,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd20                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd21                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -881,6 +889,7 @@ end else begin
 
                                                                                         }           ; end
      20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, adc_avg_cnt}        ; end
+
 
 
      20'h1???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= adc_a_rd                            ; end

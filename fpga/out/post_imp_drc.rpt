@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date         : Mon May  9 11:46:50 2016
+| Date         : Thu May 12 12:22:41 2016
 | Host         : Fermium running 64-bit Ubuntu 14.04.4 LTS
 | Command      : report_drc
 ------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ Related violations: <none>
 
 IOSR-1#1 Warning
 IOB set reset sharing  
-IO exp_p_io[0] connects to flops which have these i_asg/ch[0]/clear, i_asg/ch[1]/clear, i_scope/sys_ack_i_1_n_0 set/reset signals.  For optimal IOB flop packing there should be only one set/reset signal coming into the IOB.
+IO exp_p_io[0] connects to flops which have these i_asg/ch[1]/clear, i_scope/sys_ack_i_1_n_0, i_asg/ch[0]/clear set/reset signals.  For optimal IOB flop packing there should be only one set/reset signal coming into the IOB.
 Related violations: <none>
 
 PLIO-7#1 Warning

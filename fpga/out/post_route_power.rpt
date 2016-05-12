@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Mon May  9 11:46:49 2016
+| Date             : Thu May 12 12:22:40 2016
 | Host             : Fermium running 64-bit Ubuntu 14.04.4 LTS
 | Command          : 
 | Design           : red_pitaya_top
@@ -49,19 +49,19 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.031 |       14 |       --- |             --- |
-| Slice Logic              |     0.022 |    10738 |       --- |             --- |
-|   LUT as Logic           |     0.018 |     4086 |     17600 |           23.22 |
+| Clocks                   |     0.032 |       14 |       --- |             --- |
+| Slice Logic              |     0.022 |    10773 |       --- |             --- |
+|   LUT as Logic           |     0.018 |     4103 |     17600 |           23.31 |
 |   CARRY4                 |     0.002 |      392 |      4400 |            8.91 |
-|   Register               |     0.001 |     4635 |     35200 |           13.17 |
+|   Register               |     0.001 |     4659 |     35200 |           13.24 |
 |   LUT as Distributed RAM |    <0.001 |      160 |      6000 |            2.67 |
-|   F7/F8 Muxes            |    <0.001 |       15 |     17600 |            0.09 |
+|   F7/F8 Muxes            |    <0.001 |       12 |     17600 |            0.07 |
 |   LUT as Shift Register  |    <0.001 |       63 |      6000 |            1.05 |
 |   Others                 |     0.000 |      249 |       --- |             --- |
-| Signals                  |     0.034 |     8603 |       --- |             --- |
+| Signals                  |     0.034 |     8639 |       --- |             --- |
 | Block RAM                |     0.108 |       40 |        60 |           66.67 |
 | PLL                      |     0.097 |        1 |         2 |           50.00 |
-| DSPs                     |     0.014 |       12 |        80 |           15.00 |
+| DSPs                     |     0.013 |       12 |        80 |           15.00 |
 | I/O                      |     0.288 |       93 |       100 |           93.00 |
 | XADC                     |     0.004 |        1 |       --- |             --- |
 | PS7                      |     1.292 |        1 |       --- |             --- |
@@ -76,7 +76,7 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
-| Vccint    |       1.000 |     0.216 |       0.207 |      0.010 |
+| Vccint    |       1.000 |     0.217 |       0.207 |      0.010 |
 | Vccaux    |       1.800 |     0.069 |       0.057 |      0.012 |
 | Vcco33    |       3.300 |     0.085 |       0.084 |      0.001 |
 | Vcco25    |       2.500 |     0.001 |       0.000 |      0.001 |
@@ -164,8 +164,8 @@ Table of Contents
 |   i_ams                                                                          |    <0.001 |
 |   i_asg                                                                          |     0.080 |
 |     ch[0]                                                                        |     0.038 |
-|     ch[1]                                                                        |     0.039 |
-|   i_hk                                                                           |    <0.001 |
+|     ch[1]                                                                        |     0.038 |
+|   i_hk                                                                           |     0.001 |
 |   i_iobufn[0]                                                                    |    <0.001 |
 |   i_iobufn[1]                                                                    |    <0.001 |
 |   i_iobufn[2]                                                                    |    <0.001 |
@@ -226,11 +226,11 @@ Table of Contents
 |       axi_wfifo_reg_0_15_6_11                                                    |    <0.001 |
 |       axi_wfifo_reg_0_15_72_72                                                   |    <0.001 |
 |     axi_slave_gp0                                                                |     0.002 |
-|     system_i                                                                     |     1.314 |
-|       system_i                                                                   |     1.314 |
-|         axi_protocol_converter_0                                                 |     0.012 |
-|           inst                                                                   |     0.012 |
-|             gen_axilite.gen_b2s_conv.axilite_b2s                                 |     0.012 |
+|     system_i                                                                     |     1.315 |
+|       system_i                                                                   |     1.315 |
+|         axi_protocol_converter_0                                                 |     0.013 |
+|           inst                                                                   |     0.013 |
+|             gen_axilite.gen_b2s_conv.axilite_b2s                                 |     0.013 |
 |               MI_REG                                                             |     0.000 |
 |                 ar_pipe                                                          |     0.000 |
 |                 aw_pipe                                                          |     0.000 |
@@ -243,7 +243,7 @@ Table of Contents
 |                 ar_cmd_fsm_0                                                     |    <0.001 |
 |                 cmd_translator_0                                                 |     0.002 |
 |                   incr_cmd_0                                                     |    <0.001 |
-|                   wrap_cmd_0                                                     |    <0.001 |
+|                   wrap_cmd_0                                                     |     0.001 |
 |               RD.r_channel_0                                                     |     0.002 |
 |                 rd_data_fifo_0                                                   |     0.001 |
 |                 transaction_fifo_0                                               |    <0.001 |
@@ -306,11 +306,11 @@ Table of Contents
 |                   MEM_DECODE_GEN[1].PER_CE_GEN[9].MULTIPLE_CES_THIS_CS_GEN.CE_I  |    <0.001 |
 |                   MEM_DECODE_GEN[2].GEN_FOR_MULTI_CS.MEM_SELECT_I                |    <0.001 |
 |             AXI_XADC_CORE_I                                                      |     0.005 |
-|             INTR_CTRLR_GEN_I.INTERRUPT_CONTROL_I                                 |    <0.001 |
+|             INTR_CTRLR_GEN_I.INTERRUPT_CONTROL_I                                 |     0.001 |
 |             SOFT_RESET_I                                                         |    <0.001 |
-|   i_scope                                                                        |     0.092 |
+|   i_scope                                                                        |     0.091 |
 |     i_dfilt1_cha                                                                 |     0.009 |
-|     i_dfilt1_chb                                                                 |     0.009 |
+|     i_dfilt1_chb                                                                 |     0.007 |
 |     i_wr0                                                                        |     0.005 |
 |     i_wr1                                                                        |     0.005 |
 |   pll                                                                            |     0.097 |

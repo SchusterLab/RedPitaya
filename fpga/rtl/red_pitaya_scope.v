@@ -219,7 +219,6 @@ reg   [  18-1: 0] adc_avg_cnt   ;   //hw averaging counter
 reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
 
 reg               ss_mode       ;   //1 if single shot mode
-reg   [  32-1: 0] ss_shot_ptr   ;   //Number of triggers since experiment started
 reg   [  32-1: 0] ss_read_ptr   ;   //Number of results readout from memory
 reg               ss_overflow   ;   //1 if there has been overflow (ss_shot_ptr-ss_read_ptr > 2**RSZ)
 
@@ -880,7 +879,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd21                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd24                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -895,8 +894,10 @@ end else begin
      20'h1???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= adc_a_rd                            ; end
      20'h2???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= adc_b_rd                            ; end
 
-     20'h3zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_a                    ; end
-     20'h4zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= conv_buf_rdata_b                    ; end
+     20'h3zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_11}  ; end
+     20'h4zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_12}  ; end
+     20'h5zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_21}  ; end
+     20'h6zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_22}  ; end
 
        default : begin sys_ack <= sys_en;          sys_rdata <=  32'h0                              ; end
    endcase
@@ -907,15 +908,19 @@ end
 //Buffer for convolution filter data
 
 
-reg   [  32-1: 0] conv_buf_a [0:(1<<RSZ)-1] ;   //Convolution buffer for Ch A
-reg   [  32-1: 0] conv_buf_b [0:(1<<RSZ)-1] ;   //Convolution buffer for Ch B
+reg   [  16-1: 0] conv_buf_11 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_12 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_21 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_22 [0:(1<<RSZ)-1] ;   //Convolution buffers
 
-reg               conv_buf_a_we, conv_buf_b_we     ; //Write enable for A and B
-reg   [ RSZ-1: 0] conv_raddr, conv_a_raddr, conv_b_raddr  ;               //Address within conv_buf (a or b)
-reg   [  32-1: 0] conv_buf_rdata_a, conv_buf_rdata_b ;
+reg               conv_buf_11_we, conv_buf_12_we     ; //Write enable for A and B
+reg               conv_buf_21_we, conv_buf_22_we     ; //Write enable for A and B
+reg   [ RSZ-1: 0] conv_raddr;
+reg   [ RSZ-1: 0] conv_11_raddr, conv_12_raddr,conv_21_raddr, conv_22_raddr  ;               //Address within conv_buf (a or b)
+reg   [  16-1: 0] conv_buf_rdata_11, conv_buf_rdata_12, conv_buf_rdata_21, conv_buf_rdata_22;
 
-reg   [  32-1: 0] conv_rd_a, conv_rd_b    ;
-reg   [  32-1: 0] conv_rdat_a, conv_rdat_b  ;
+reg   [  16-1: 0] conv_rd_11, conv_rd_12, conv_rd_21, conv_rd_22    ;
+reg   [  16-1: 0] conv_rdat_11, conv_rdat_12, conv_rdat_21, conv_rdat_22  ;
 reg   [ RSZ-1: 0] conv_rp    ;
 reg   [RSZ+15: 0] conv_pnt   ; // read pointer
 
@@ -924,35 +929,48 @@ reg   [RSZ+15: 0] conv_pnt   ; // read pointer
 
 
 always @(posedge adc_clk_i) begin
-   conv_buf_a_we   <= sys_wen && (sys_addr[19:RSZ+2] == 'h3);
-   conv_buf_b_we   <= sys_wen && (sys_addr[19:RSZ+2] == 'h4);   
-   conv_raddr      <= sys_addr[RSZ+1:2] ; // address synchronous to clock
-   conv_a_raddr    <= conv_raddr     ; // double register 
-   conv_b_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
+   conv_buf_11_we   <= sys_wen && (sys_addr[19:16] == 'h3);
+   conv_buf_12_we   <= sys_wen && (sys_addr[19:16] == 'h4);   
+   conv_buf_21_we   <= sys_wen && (sys_addr[19:16] == 'h5);
+   conv_buf_22_we   <= sys_wen && (sys_addr[19:16] == 'h6); 
+   conv_raddr       <= sys_addr[RSZ+1:2] ; // address synchronous to clock
+   conv_11_raddr    <= conv_raddr     ; // double register 
+   conv_12_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
+   conv_21_raddr    <= conv_raddr     ; // double register 
+   conv_22_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
 end
 
 // read
 always @(posedge adc_clk_i)
 begin
-   conv_rp       <= conv_pnt[RSZ+15:16];
-   conv_rd_a     <= conv_buf_a[conv_rp] ;
-   conv_rdat_a   <= conv_rd_a ;  // improve timing
-   conv_rd_b     <= conv_buf_b[conv_rp] ;
-   conv_rdat_b   <= conv_rd_b ;  // improve timing
+   conv_rp        <= conv_pnt[RSZ+15:16];
+   conv_rd_11     <= conv_buf_11[conv_rp] ;
+   conv_rdat_11   <= conv_rd_11 ;  // improve timing
+   conv_rd_12     <= conv_buf_12[conv_rp] ;
+   conv_rdat_12   <= conv_rd_12 ;  // improve timing
+   conv_rd_21     <= conv_buf_21[conv_rp] ;
+   conv_rdat_21   <= conv_rd_21 ;  // improve timing
+   conv_rd_22     <= conv_buf_22[conv_rp] ;
+   conv_rdat_22   <= conv_rd_22 ;  // improve timing
 end
 
 // write
 always @(posedge adc_clk_i)
 begin
-  if (conv_buf_a_we)  conv_buf_a[conv_a_raddr] <= sys_wdata[32-1:0] ;
-  if (conv_buf_b_we)  conv_buf_b[conv_b_raddr] <= sys_wdata[32-1:0] ;
+  if (conv_buf_11_we)  conv_buf_11[conv_11_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_12_we)  conv_buf_12[conv_12_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_21_we)  conv_buf_21[conv_21_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_22_we)  conv_buf_22[conv_22_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_11_we)  t5 <= conv_buf_11_we;
 end
 
 // read-back
 always @(posedge adc_clk_i)
 begin
-conv_buf_rdata_a <= conv_buf_a[conv_a_raddr] ;
-conv_buf_rdata_b <= conv_buf_b[conv_b_raddr] ;
+  conv_buf_rdata_11 <= conv_buf_11[conv_11_raddr] ;
+  conv_buf_rdata_12 <= conv_buf_12[conv_12_raddr] ;
+  conv_buf_rdata_21 <= conv_buf_21[conv_21_raddr] ;
+  conv_buf_rdata_22 <= conv_buf_22[conv_22_raddr] ;
 end
 
 endmodule

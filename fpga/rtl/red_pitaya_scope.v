@@ -229,6 +229,15 @@ reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
 assign npt_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then must be in no pre-trigger mode
 assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mode
 
+
+reg  [ 32-1: 0]   adc_a_score   ;
+reg  [ 32-1: 0]   adc_b_score   ;
+reg  [ RSZ-1: 0]  win_start, win_stop;
+reg  [ RSZ-1: 0]  ss_cnt;
+
+
+
+
 //State machine
 // Write
 always @(posedge adc_clk_i) begin
@@ -264,13 +273,14 @@ always @(posedge adc_clk_i) begin
       if (((adc_dly_do || adc_trig) && (adc_dly_cnt == 32'h0) && ~adc_we_keep) || adc_rst_do) //delay reached or reset
       begin
          adc_we <= 1'b0 ;
-         if (adc_avg_do) adc_avg_cnt <= adc_avg_cnt +1;   //If averaging and done with trace increment avg.
+         if (adc_avg_do) adc_avg_cnt <= adc_avg_cnt + 1;   //If averaging and done with trace increment avg.
       end
 
       if (adc_rst_do)
       begin
         adc_avg_cnt <= 18'd0;
         adc_avg_do  <= 1'b0 ;
+
       end else if (adc_avg_cnt == set_avgs)
         adc_avg_do  <= 1'b0 ;
 
@@ -304,9 +314,15 @@ always @(posedge adc_clk_i) begin
          adc_dly_do  <= 1'b0 ;
 
       if (adc_dly_do && adc_we && adc_dv)
+      begin
          adc_dly_cnt <= adc_dly_cnt - 1;    //decrement adc_dly_cnt
+         ss_cnt <= ss_cnt + 1; 
+      end
       else if (!adc_dly_do)
+      begin
          adc_dly_cnt <= set_dly ;           //set adc_dly_cnt to initial value
+         ss_cnt <= 0;
+      end
 
    end
 end
@@ -314,15 +330,29 @@ end
 always @(posedge adc_clk_i) begin
    adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
    adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
-   if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
+   if (adc_rst_do) begin
+      adc_a_score   <= 32'h0 ;
+      adc_b_score   <= 32'h0 ;
+   end
+   else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
       t2 <= 1'b1;      
       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
       adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
+      if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
+      begin
+        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
+        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
+      end
    end 
    else if (adc_we && adc_dv && avg_mode) begin
-       t3 <= 1'b1;
-       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
-       adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
+      t3 <= 1'b1;
+      adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
+      adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
+      if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
+      begin
+        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
+        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
+      end
    end
 end
 
@@ -343,25 +373,6 @@ always @(posedge adc_clk_i) begin
    adc_a_rd    <= adc_a_buf[adc_a_raddr[RSZ-1:0]] ;
    adc_b_rd    <= adc_b_buf[adc_b_raddr[RSZ-1:0]] ;
 end
-
-//---------------------------------------------------------------------------------
-//  Hardware accumulate
-//  Added by DS
-
-reg  [ 48-1: 0]   adc_a_score   ;
-reg  [ 48-1: 0]   adc_b_score   ;
-reg  [ RSZ-1: 0]  win_start, win_stop;
-
-always @(posedge adc_clk_i)
-if (adc_rstn_i == 1'b0) begin
-  adc_a_score   <= 48'h0 ;
-  adc_b_score   <= 48'h0 ;
-end else begin
-    adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
-    adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;
-  end
-
-
 
 //---------------------------------------------------------------------------------
 //
@@ -815,6 +826,9 @@ end else begin
 
       if (sys_addr[19:0]==20'h90)   set_deb_len     <= sys_wdata[20-1:0] ;
       if (sys_addr[19:0]==20'hAC)   set_avgs        <= sys_wdata[18-1:0] ;
+
+      if (sys_addr[19:0]==20'hC4)   win_start       <= sys_wdata[RSZ-1:0] ;
+      if (sys_addr[19:0]==20'hC8)   win_stop        <= sys_wdata[RSZ-1:0] ;
    end
 end
 
@@ -879,7 +893,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd24                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd34                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -888,6 +902,10 @@ end else begin
 
                                                                                         }           ; end
      20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, adc_avg_cnt}        ; end
+     20'h000BC : begin sys_ack <= sys_en;          sys_rdata <= adc_a_score                         ; end
+     20'h000C0 : begin sys_ack <= sys_en;          sys_rdata <= adc_b_score                         ; end
+     20'h000C4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-RSZ{1'b0}}, win_start}         ; end
+     20'h000C8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-RSZ{1'b0}}, win_stop}          ; end
 
 
 
@@ -961,7 +979,6 @@ begin
   if (conv_buf_12_we)  conv_buf_12[conv_12_raddr] <= sys_wdata[16-1:0] ;
   if (conv_buf_21_we)  conv_buf_21[conv_21_raddr] <= sys_wdata[16-1:0] ;
   if (conv_buf_22_we)  conv_buf_22[conv_22_raddr] <= sys_wdata[16-1:0] ;
-  if (conv_buf_11_we)  t5 <= conv_buf_11_we;
 end
 
 // read-back

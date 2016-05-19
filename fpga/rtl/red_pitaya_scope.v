@@ -48,7 +48,7 @@
  */
 
 module red_pitaya_scope #(
-  parameter RSZ = 12  // RAM size 2^RSZ
+  parameter RSZ = 13  // RAM size 2^RSZ
 )(
    // ADC
    input                 adc_clk_i       ,  // ADC clock
@@ -215,13 +215,11 @@ reg   [  20-1: 0] set_deb_len   ;   // debouncing length (glitch free time after
 wire              npt_mode      ;   //1 if No-PreTrigger mode 0 otherwise
 wire              avg_mode      ;   //1 if averaging mode
 reg               adc_avg_do    ;   //1 while averaging
-reg   [  18-1: 0] adc_avg_cnt   ;   //hw averaging counter
+reg   [  32-1: 0] adc_avg_cnt   ;   //hw averaging counter
 reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
 
 reg               ss_mode       ;   //1 if single shot mode
-reg   [  32-1: 0] ss_read_ptr   ;   //Number of results readout from memory
-reg               ss_overflow   ;   //1 if there has been overflow (ss_shot_ptr-ss_read_ptr > 2**RSZ)
-
+reg   [ RSZ-1: 0] ss_cnt        ;   //Counter for single shot mode
 
 reg               adc_trigged   ;   //debugging to see if it started writing
 reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
@@ -230,10 +228,9 @@ assign npt_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then must be in no
 assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mode
 
 
-reg  [ 32-1: 0]   adc_a_score   ;
-reg  [ 32-1: 0]   adc_b_score   ;
+reg  [ 32-1: 0]   adc_a_score, adc_b_score   ;
 reg  [ RSZ-1: 0]  win_start, win_stop;
-reg  [ RSZ-1: 0]  ss_cnt;
+reg               a_thresh,bthresh;
 
 
 
@@ -253,7 +250,7 @@ always @(posedge adc_clk_i) begin
       adc_avg_do  <=  1'b0      ;
 
       adc_trigged <=  1'b0      ;
-      t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0; t5 <= 1'b0;
+      t5 <= 1'b0;
    end
    else begin
 
@@ -278,7 +275,7 @@ always @(posedge adc_clk_i) begin
 
       if (adc_rst_do)
       begin
-        adc_avg_cnt <= 18'd0;
+        adc_avg_cnt <= 32'd0;
         adc_avg_do  <= 1'b0 ;
 
       end else if (adc_avg_cnt == set_avgs)
@@ -292,9 +289,11 @@ always @(posedge adc_clk_i) begin
 
    
       if (adc_rst_do || !adc_we)
-         adc_wp <= 12'd1;
-      else if (adc_we && adc_dv)
+         adc_wp <= 13'd1;
+      else if (adc_we && adc_dv && !ss_mode)
          adc_wp <= adc_wp + 1;              // advance write pointer
+         else if (adc_we && adc_dv && ss_mode)
+           adc_wp <= adc_avg_cnt;
 
       if (adc_rst_do)
          adc_wp_trig <= 32'h0;
@@ -304,7 +303,7 @@ always @(posedge adc_clk_i) begin
       
       if (adc_rst_do || !adc_we)
          adc_wp_cur <= 32'h0;
-      else if (adc_we && adc_dv)
+      else if (adc_we && adc_dv )
          adc_wp_cur <= adc_wp ;             // save current write pointer
 
 
@@ -321,7 +320,7 @@ always @(posedge adc_clk_i) begin
       else if (!adc_dly_do)
       begin
          adc_dly_cnt <= set_dly ;           //set adc_dly_cnt to initial value
-         ss_cnt <= 0;
+         ss_cnt <= {RSZ{1'b0}};
       end
 
    end
@@ -331,28 +330,37 @@ always @(posedge adc_clk_i) begin
    adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
    adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
    if (adc_rst_do) begin
+
       adc_a_score   <= 32'h0 ;
       adc_b_score   <= 32'h0 ;
+      t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0;
+   end
+   else if (adc_we && adc_dv && ss_mode) begin
+      if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
+      begin
+        t1 <= 1'b1;
+        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
+        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
+      end
+      else if (ss_cnt == win_stop) 
+      begin
+        t2 <= 1'b1;  
+        adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_score);
+        adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_score);
+
+        adc_a_score   <= 32'h0 ;
+        adc_b_score   <= 32'h0 ;
+      end
    end
    else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
-      t2 <= 1'b1;      
+      t3 <= 1'b1;      
       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
       adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
-      if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
-      begin
-        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
-        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
-      end
    end 
    else if (adc_we && adc_dv && avg_mode) begin
-      t3 <= 1'b1;
+      t4 <= 1'b1;
       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
       adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
-      if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
-      begin
-        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
-        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
-      end
    end
 end
 
@@ -893,7 +901,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd34                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd38                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -901,7 +909,7 @@ end else begin
                                                                                 adc_avg_do
 
                                                                                         }           ; end
-     20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, adc_avg_cnt}        ; end
+     20'h000B8 : begin sys_ack <= sys_en;          sys_rdata <= adc_avg_cnt                         ; end
      20'h000BC : begin sys_ack <= sys_en;          sys_rdata <= adc_a_score                         ; end
      20'h000C0 : begin sys_ack <= sys_en;          sys_rdata <= adc_b_score                         ; end
      20'h000C4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-RSZ{1'b0}}, win_start}         ; end

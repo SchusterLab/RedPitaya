@@ -34,3 +34,12 @@ scpi-server/scpi-server
 # SCPI Server examples
 scpi-server/3rdparty/libs/scpi-parser/examples/
 
+#python files
+.pyc
+
+#pycharm
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml

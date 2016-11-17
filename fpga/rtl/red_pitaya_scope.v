@@ -218,7 +218,7 @@ reg               adc_avg_do    ;   //1 while averaging
 reg   [  32-1: 0] adc_avg_cnt   ;   //hw averaging counter
 reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
 
-reg               ss_mode       ;   //1 if single shot mode
+reg               ss_mode,ss_2ch;   //1 if single shot mode
 reg   [ RSZ-1: 0] ss_cnt        ;   //Counter for single shot mode
 
 reg               adc_trigged   ;   //debugging to see if it started writing
@@ -228,9 +228,11 @@ assign npt_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then must be in no
 assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mode
 
 
-reg  [ 32-1: 0]   adc_a_score, adc_b_score   ;
+reg  [ 32-1: 0]   adc_a_score, adc_b_score, adc_a_score_up, adc_b_score_up   ;
 reg  [ RSZ-1: 0]  win_start, win_stop;
 reg               a_thresh,bthresh;
+
+reg  [16-1:0]     xm, ym, xd, yd, xm1, ym1, xd1, yd1;     
 
 
 
@@ -329,6 +331,14 @@ end
 always @(posedge adc_clk_i) begin
    adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
    adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
+   xm <= xm1;
+   ym <= ym1;
+   xd <= xd1;
+   yd <= yd1;
+   xm1 <= conv_buf_11[ss_cnt];
+   ym1 <= conv_buf_12[ss_cnt];
+   xd1 <= conv_buf_21[ss_cnt];
+   yd1 <= conv_buf_22[ss_cnt];
    if (adc_rst_do) begin
 
       adc_a_score   <= 32'h0 ;
@@ -339,8 +349,17 @@ always @(posedge adc_clk_i) begin
       if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
       begin
         t1 <= 1'b1;
-        adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat) ;
-        adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat) ;        
+        if (ss_2ch)
+        begin
+          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
+          adc_b_score <= $signed(adc_b_score) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+        end
+        else 
+        begin
+          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+          adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;;
+        end
+                    
       end
       else if (ss_cnt == win_stop) 
       begin
@@ -812,6 +831,7 @@ end else begin
       if (sys_addr[19:0]==20'h24)   set_b_hyst    <= sys_wdata[14-1:0] ;
       if (sys_addr[19:0]==20'h28)   set_avg_en    <= sys_wdata[     0] ;
       if (sys_addr[19:0]==20'h28)   ss_mode       <= sys_wdata[     1] ;
+      if (sys_addr[19:0]==20'h28)   ss_2ch        <= sys_wdata[     2] ;
 
       if (sys_addr[19:0]==20'h30)   set_a_filt_aa <= sys_wdata[18-1:0] ;
       if (sys_addr[19:0]==20'h34)   set_a_filt_bb <= sys_wdata[25-1:0] ;
@@ -901,7 +921,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd38                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd42                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

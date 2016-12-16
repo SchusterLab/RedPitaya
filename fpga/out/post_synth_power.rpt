@@ -1,8 +1,8 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Wed May 18 15:31:01 2016
-| Host             : Fermium running 64-bit Ubuntu 14.04.4 LTS
+| Date             : Thu Nov 17 19:03:56 2016
+| Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : report_power -file out/post_synth_power.rpt
 | Design           : red_pitaya_top
 | Device           : xc7z010clg400-1

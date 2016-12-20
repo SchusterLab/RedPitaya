@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Fri Dec 16 13:25:00 2016
+| Date             : Tue Dec 20 15:07:24 2016
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : report_power -file out/post_synth_power.rpt
 | Design           : red_pitaya_top
@@ -50,16 +50,16 @@ Table of Contents
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
 | Clocks                   |     0.053 |       15 |       --- |             --- |
-| Slice Logic              |     0.034 |    19681 |       --- |             --- |
-|   LUT as Logic           |     0.027 |     5380 |     17600 |           30.57 |
+| Slice Logic              |     0.034 |    19691 |       --- |             --- |
+|   LUT as Logic           |     0.027 |     5389 |     17600 |           30.62 |
 |   CARRY4                 |     0.004 |      443 |      4400 |           10.07 |
 |   Register               |     0.002 |     5477 |     35200 |           15.56 |
 |   LUT as Distributed RAM |     0.001 |     4256 |      6000 |           70.93 |
-|   F7/F8 Muxes            |    <0.001 |     2421 |     17600 |           13.76 |
+|   F7/F8 Muxes            |    <0.001 |     2419 |     17600 |           13.74 |
 |   LUT as Shift Register  |    <0.001 |       71 |      6000 |            1.18 |
 |   Others                 |     0.000 |      267 |       --- |             --- |
 |   BUFG                   |     0.000 |        1 |        32 |            3.13 |
-| Signals                  |     0.073 |    11477 |       --- |             --- |
+| Signals                  |     0.073 |    11491 |       --- |             --- |
 | Block RAM                |     0.215 |       60 |        60 |          100.00 |
 | PLL                      |     0.097 |        1 |         2 |           50.00 |
 | DSPs                     |     0.018 |       16 |        80 |           20.00 |
@@ -316,7 +316,7 @@ Table of Contents
 |             SOFT_RESET_I                                                         |    <0.001 |
 |         xlconstant                                                               |     0.000 |
 |           inst                                                                   |     0.000 |
-|   i_scope                                                                        |     0.253 |
+|   i_scope                                                                        |     0.254 |
 |     conv_buf_22_reg_0_127_0_0                                                    |    <0.001 |
 |     conv_buf_22_reg_0_127_10_10                                                  |    <0.001 |
 |     conv_buf_22_reg_0_127_11_11                                                  |    <0.001 |

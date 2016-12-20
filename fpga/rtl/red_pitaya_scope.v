@@ -232,7 +232,7 @@ reg  [ 32-1: 0]   adc_a_score, adc_b_score, adc_a_score_up, adc_b_score_up   ;
 reg  [ RSZ-1: 0]  win_start, win_stop;
 reg               a_thresh,bthresh;
 
-reg  [16-1:0]     xm, ym, xd, yd, xm1, ym1, xd1, yd1;     
+reg  [16-1:0]     xm, ym, xd, yd;// , xm1, ym1, xd1, yd1;     
 
 
 
@@ -331,14 +331,14 @@ end
 always @(posedge adc_clk_i) begin
    adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
    adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
-   xm <= xm1;
-   ym <= ym1;
-   xd <= xd1;
-   yd <= yd1;
-   xm1 <= conv_buf_11[ss_cnt];
-   ym1 <= conv_buf_12[ss_cnt];
-   xd1 <= conv_buf_21[ss_cnt];
-   yd1 <= conv_buf_22[ss_cnt];
+   // xm <= xm1;
+   // ym <= ym1;
+   // xd <= xd1;
+   // yd <= yd1;
+   xm <= conv_buf_11[ss_cnt];
+   ym <= conv_buf_12[ss_cnt];
+   xd <= conv_buf_21[ss_cnt];
+   yd <= conv_buf_22[ss_cnt];
    if (adc_rst_do) begin
 
       adc_a_score   <= 32'h0 ;
@@ -356,8 +356,8 @@ always @(posedge adc_clk_i) begin
         end
         else 
         begin
-          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
-          adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;;
+          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);// + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+          // adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;
         end
                     
       end
@@ -921,7 +921,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd44                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd45                             ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

@@ -335,10 +335,10 @@ always @(posedge adc_clk_i) begin
    // ym <= ym1;
    // xd <= xd1;
    // yd <= yd1;
-   // xm <= conv_buf_11[ss_cnt];
-   // ym <= conv_buf_12[ss_cnt];
-   // xd <= conv_buf_21[ss_cnt];
-   // yd <= conv_buf_22[ss_cnt];
+   xm <= conv_buf_11[ss_cnt];
+   ym <= conv_buf_12[ss_cnt];
+   xd <= conv_buf_21[ss_cnt];
+   yd <= conv_buf_22[ss_cnt];
    if (adc_rst_do) begin
 
       adc_a_score   <= 32'h0 ;
@@ -351,16 +351,12 @@ always @(posedge adc_clk_i) begin
         t1 <= 1'b1;
         if (ss_2ch)
         begin
-          adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat);
-          adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat);
-          // adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
-          // adc_b_score <= $signed(adc_b_score) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
+          adc_b_score <= $signed(adc_b_score) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
         end
         else 
         begin
-          adc_a_score <= $signed(adc_a_score) + $signed(adc_a_dat);
-          adc_b_score <= $signed(adc_b_score) + $signed(adc_b_dat);
-          // adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);// + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+          adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);// + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
           // adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;
         end
                     
@@ -944,10 +940,10 @@ end else begin
      20'h1???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= adc_a_rd                            ; end
      20'h2???? : begin sys_ack <= adc_rd_dv;       sys_rdata <= adc_b_rd                            ; end
 
-     // 20'h3zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_11}  ; end
-     // 20'h4zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_12}  ; end
-     // 20'h5zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_21}  ; end
-     // 20'h6zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_22}  ; end
+     20'h3zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_11}  ; end
+     20'h4zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_12}  ; end
+     20'h5zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_21}  ; end
+     20'h6zzzz : begin sys_ack <= adc_rd_dv;       sys_rdata <= {{32-16{1'b0}}, conv_buf_rdata_22}  ; end
 
        default : begin sys_ack <= sys_en;          sys_rdata <=  32'h0                              ; end
    endcase
@@ -958,68 +954,68 @@ end
 //Buffer for convolution filter data
 
 
-// reg   [  16-1: 0] conv_buf_11 [0:(1<<RSZ)-1] ;   //Convolution buffers
-// reg   [  16-1: 0] conv_buf_12 [0:(1<<RSZ)-1] ;   //Convolution buffers
-// reg   [  16-1: 0] conv_buf_21 [0:(1<<RSZ)-1] ;   //Convolution buffers
-// reg   [  16-1: 0] conv_buf_22 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_11 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_12 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_21 [0:(1<<RSZ)-1] ;   //Convolution buffers
+reg   [  16-1: 0] conv_buf_22 [0:(1<<RSZ)-1] ;   //Convolution buffers
 
-// reg               conv_buf_11_we, conv_buf_12_we     ; //Write enable for A and B
-// reg               conv_buf_21_we, conv_buf_22_we     ; //Write enable for A and B
-// reg   [ RSZ-1: 0] conv_raddr;
-// reg   [ RSZ-1: 0] conv_11_raddr, conv_12_raddr,conv_21_raddr, conv_22_raddr  ;               //Address within conv_buf (a or b)
-// reg   [  16-1: 0] conv_buf_rdata_11, conv_buf_rdata_12, conv_buf_rdata_21, conv_buf_rdata_22;
+reg               conv_buf_11_we, conv_buf_12_we     ; //Write enable for A and B
+reg               conv_buf_21_we, conv_buf_22_we     ; //Write enable for A and B
+reg   [ RSZ-1: 0] conv_raddr;
+reg   [ RSZ-1: 0] conv_11_raddr, conv_12_raddr,conv_21_raddr, conv_22_raddr  ;               //Address within conv_buf (a or b)
+reg   [  16-1: 0] conv_buf_rdata_11, conv_buf_rdata_12, conv_buf_rdata_21, conv_buf_rdata_22;
 
-// reg   [  16-1: 0] conv_rd_11, conv_rd_12, conv_rd_21, conv_rd_22    ;
-// reg   [  16-1: 0] conv_rdat_11, conv_rdat_12, conv_rdat_21, conv_rdat_22  ;
-// reg   [ RSZ-1: 0] conv_rp    ;
-// reg   [RSZ+15: 0] conv_pnt   ; // read pointer
+reg   [  16-1: 0] conv_rd_11, conv_rd_12, conv_rd_21, conv_rd_22    ;
+reg   [  16-1: 0] conv_rdat_11, conv_rdat_12, conv_rdat_21, conv_rdat_22  ;
+reg   [ RSZ-1: 0] conv_rp    ;
+reg   [RSZ+15: 0] conv_pnt   ; // read pointer
 
-// // reg   [  28-1: 0] conv_mult  ;
-// // reg   [  15-1: 0] conv_sum   ;
+// reg   [  28-1: 0] conv_mult  ;
+// reg   [  15-1: 0] conv_sum   ;
 
 
-// always @(posedge adc_clk_i) begin
-//    conv_buf_11_we   <= sys_wen && (sys_addr[19:16] == 'h3);
-//    conv_buf_12_we   <= sys_wen && (sys_addr[19:16] == 'h4);   
-//    conv_buf_21_we   <= sys_wen && (sys_addr[19:16] == 'h5);
-//    conv_buf_22_we   <= sys_wen && (sys_addr[19:16] == 'h6); 
-//    conv_raddr       <= sys_addr[RSZ+1:2] ; // address synchronous to clock
-//    conv_11_raddr    <= conv_raddr     ; // double register 
-//    conv_12_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
-//    conv_21_raddr    <= conv_raddr     ; // double register 
-//    conv_22_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
-// end
+always @(posedge adc_clk_i) begin
+   conv_buf_11_we   <= sys_wen && (sys_addr[19:16] == 'h3);
+   conv_buf_12_we   <= sys_wen && (sys_addr[19:16] == 'h4);   
+   conv_buf_21_we   <= sys_wen && (sys_addr[19:16] == 'h5);
+   conv_buf_22_we   <= sys_wen && (sys_addr[19:16] == 'h6); 
+   conv_raddr       <= sys_addr[RSZ+1:2] ; // address synchronous to clock
+   conv_11_raddr    <= conv_raddr     ; // double register 
+   conv_12_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
+   conv_21_raddr    <= conv_raddr     ; // double register 
+   conv_22_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
+end
 
-// // read
-// always @(posedge adc_clk_i)
-// begin
-//    conv_rp        <= conv_pnt[RSZ+15:16];
-//    conv_rd_11     <= conv_buf_11[conv_rp] ;
-//    conv_rdat_11   <= conv_rd_11 ;  // improve timing
-//    conv_rd_12     <= conv_buf_12[conv_rp] ;
-//    conv_rdat_12   <= conv_rd_12 ;  // improve timing
-//    conv_rd_21     <= conv_buf_21[conv_rp] ;
-//    conv_rdat_21   <= conv_rd_21 ;  // improve timing
-//    conv_rd_22     <= conv_buf_22[conv_rp] ;
-//    conv_rdat_22   <= conv_rd_22 ;  // improve timing
-// end
+// read
+always @(posedge adc_clk_i)
+begin
+   conv_rp        <= conv_pnt[RSZ+15:16];
+   conv_rd_11     <= conv_buf_11[conv_rp] ;
+   conv_rdat_11   <= conv_rd_11 ;  // improve timing
+   conv_rd_12     <= conv_buf_12[conv_rp] ;
+   conv_rdat_12   <= conv_rd_12 ;  // improve timing
+   conv_rd_21     <= conv_buf_21[conv_rp] ;
+   conv_rdat_21   <= conv_rd_21 ;  // improve timing
+   conv_rd_22     <= conv_buf_22[conv_rp] ;
+   conv_rdat_22   <= conv_rd_22 ;  // improve timing
+end
 
-// // write
-// always @(posedge adc_clk_i)
-// begin
-//   if (conv_buf_11_we)  conv_buf_11[conv_11_raddr] <= sys_wdata[16-1:0] ;
-//   if (conv_buf_12_we)  conv_buf_12[conv_12_raddr] <= sys_wdata[16-1:0] ;
-//   if (conv_buf_21_we)  conv_buf_21[conv_21_raddr] <= sys_wdata[16-1:0] ;
-//   if (conv_buf_22_we)  conv_buf_22[conv_22_raddr] <= sys_wdata[16-1:0] ;
-// end
+// write
+always @(posedge adc_clk_i)
+begin
+  if (conv_buf_11_we)  conv_buf_11[conv_11_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_12_we)  conv_buf_12[conv_12_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_21_we)  conv_buf_21[conv_21_raddr] <= sys_wdata[16-1:0] ;
+  if (conv_buf_22_we)  conv_buf_22[conv_22_raddr] <= sys_wdata[16-1:0] ;
+end
 
-// // read-back
-// always @(posedge adc_clk_i)
-// begin
-//   conv_buf_rdata_11 <= conv_buf_11[conv_11_raddr] ;
-//   conv_buf_rdata_12 <= conv_buf_12[conv_12_raddr] ;
-//   conv_buf_rdata_21 <= conv_buf_21[conv_21_raddr] ;
-//   conv_buf_rdata_22 <= conv_buf_22[conv_22_raddr] ;
-// end
+// read-back
+always @(posedge adc_clk_i)
+begin
+  conv_buf_rdata_11 <= conv_buf_11[conv_11_raddr] ;
+  conv_buf_rdata_12 <= conv_buf_12[conv_12_raddr] ;
+  conv_buf_rdata_21 <= conv_buf_21[conv_21_raddr] ;
+  conv_buf_rdata_22 <= conv_buf_22[conv_22_raddr] ;
+end
 
 endmodule

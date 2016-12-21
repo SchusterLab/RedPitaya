@@ -343,14 +343,20 @@ always @(posedge adc_clk_i) begin
 
       adc_a_score   <= 32'h0 ;
       adc_b_score   <= 32'h0 ;
+
+      adc_a_score_up <= 32'h0 ;
+      adc_b_score_up <= 32'h0 ;
+
       t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0;
    end
    else if (adc_we && adc_dv && ss_mode) begin
       if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
       begin
         t1 <= 1'b1;
-        adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
-        adc_b_score <= $signed(adc_b_score) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
+        adc_a_score_up <= ($signed(adc_a_dat)-$signed(xm)) * $signed(xd) ;
+        adc_b_score_up <= ($signed(adc_b_dat)-$signed(ym)) * $signed(yd) ;
+        adc_a_score <= $signed(adc_a_score) + adc_a_score_up;
+        adc_b_score <= $signed(adc_b_score) + adc_b_score_up;
         // if (ss_2ch)
         // begin
         //   adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
@@ -923,7 +929,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd46                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd47                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

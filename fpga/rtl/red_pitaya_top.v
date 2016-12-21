@@ -451,25 +451,25 @@ red_pitaya_scope i_scope (
 //---------------------------------------------------------------------------------
 //  DAC arbitrary signal generator
 
-red_pitaya_asg i_asg (
-   // DAC
-  .dac_a_o         (  asg_a                      ),  // CH 1
-  .dac_b_o         (  asg_b                      ),  // CH 2
-  .dac_clk_i       (  adc_clk                    ),  // clock
-  .dac_rstn_i      (  adc_rstn                   ),  // reset - active low
-  .trig_a_i        (  exp_p_in[0]                ),
-  .trig_b_i        (  exp_p_in[0]                ),
-  .trig_out_o      (  trig_asg_out               ),
-  // System bus
-  .sys_addr        (  sys_addr                   ),  // address
-  .sys_wdata       (  sys_wdata                  ),  // write data
-  .sys_sel         (  sys_sel                    ),  // write byte select
-  .sys_wen         (  sys_wen[2]                 ),  // write enable
-  .sys_ren         (  sys_ren[2]                 ),  // read enable
-  .sys_rdata       (  sys_rdata[ 2*32+31: 2*32]  ),  // read data
-  .sys_err         (  sys_err[2]                 ),  // error indicator
-  .sys_ack         (  sys_ack[2]                 )   // acknowledge signal
-);
+// red_pitaya_asg i_asg (
+//    // DAC
+//   .dac_a_o         (  asg_a                      ),  // CH 1
+//   .dac_b_o         (  asg_b                      ),  // CH 2
+//   .dac_clk_i       (  adc_clk                    ),  // clock
+//   .dac_rstn_i      (  adc_rstn                   ),  // reset - active low
+//   .trig_a_i        (  exp_p_in[0]                ),
+//   .trig_b_i        (  exp_p_in[0]                ),
+//   .trig_out_o      (  trig_asg_out               ),
+//   // System bus
+//   .sys_addr        (  sys_addr                   ),  // address
+//   .sys_wdata       (  sys_wdata                  ),  // write data
+//   .sys_sel         (  sys_sel                    ),  // write byte select
+//   .sys_wen         (  sys_wen[2]                 ),  // write enable
+//   .sys_ren         (  sys_ren[2]                 ),  // read enable
+//   .sys_rdata       (  sys_rdata[ 2*32+31: 2*32]  ),  // read data
+//   .sys_err         (  sys_err[2]                 ),  // error indicator
+//   .sys_ack         (  sys_ack[2]                 )   // acknowledge signal
+// );
 
 // //---------------------------------------------------------------------------------
 // //  MIMO PID controller
@@ -497,41 +497,41 @@ red_pitaya_asg i_asg (
 //  Analog mixed signals
 //  XADC and slow PWM DAC control
 
-wire  [ 24-1: 0] pwm_cfg_a;
-wire  [ 24-1: 0] pwm_cfg_b;
-wire  [ 24-1: 0] pwm_cfg_c;
-wire  [ 24-1: 0] pwm_cfg_d;
+// wire  [ 24-1: 0] pwm_cfg_a;
+// wire  [ 24-1: 0] pwm_cfg_b;
+// wire  [ 24-1: 0] pwm_cfg_c;
+// wire  [ 24-1: 0] pwm_cfg_d;
 
-red_pitaya_ams i_ams (
-   // power test
-  .clk_i           (  adc_clk                    ),  // clock
-  .rstn_i          (  adc_rstn                   ),  // reset - active low
-  // PWM configuration
-  .dac_a_o         (  pwm_cfg_a                  ),
-  .dac_b_o         (  pwm_cfg_b                  ),
-  .dac_c_o         (  pwm_cfg_c                  ),
-  .dac_d_o         (  pwm_cfg_d                  ),
-   // System bus
-  .sys_addr        (  sys_addr                   ),  // address
-  .sys_wdata       (  sys_wdata                  ),  // write data
-  .sys_sel         (  sys_sel                    ),  // write byte select
-  .sys_wen         (  sys_wen[4]                 ),  // write enable
-  .sys_ren         (  sys_ren[4]                 ),  // read enable
-  .sys_rdata       (  sys_rdata[ 4*32+31: 4*32]  ),  // read data
-  .sys_err         (  sys_err[4]                 ),  // error indicator
-  .sys_ack         (  sys_ack[4]                 )   // acknowledge signal
-);
+// red_pitaya_ams i_ams (
+//    // power test
+//   .clk_i           (  adc_clk                    ),  // clock
+//   .rstn_i          (  adc_rstn                   ),  // reset - active low
+//   // PWM configuration
+//   .dac_a_o         (  pwm_cfg_a                  ),
+//   .dac_b_o         (  pwm_cfg_b                  ),
+//   .dac_c_o         (  pwm_cfg_c                  ),
+//   .dac_d_o         (  pwm_cfg_d                  ),
+//    // System bus
+//   .sys_addr        (  sys_addr                   ),  // address
+//   .sys_wdata       (  sys_wdata                  ),  // write data
+//   .sys_sel         (  sys_sel                    ),  // write byte select
+//   .sys_wen         (  sys_wen[4]                 ),  // write enable
+//   .sys_ren         (  sys_ren[4]                 ),  // read enable
+//   .sys_rdata       (  sys_rdata[ 4*32+31: 4*32]  ),  // read data
+//   .sys_err         (  sys_err[4]                 ),  // error indicator
+//   .sys_ack         (  sys_ack[4]                 )   // acknowledge signal
+// );
 
-red_pitaya_pwm pwm [4-1:0] (
-  // system signals
-  .clk   (pwm_clk ),
-  .rstn  (pwm_rstn),
-  // configuration
-  .cfg   ({pwm_cfg_d, pwm_cfg_c, pwm_cfg_b, pwm_cfg_a}),
-  // PWM outputs
-  .pwm_o (dac_pwm_o),
-  .pwm_s ()
-);
+// red_pitaya_pwm pwm [4-1:0] (
+//   // system signals
+//   .clk   (pwm_clk ),
+//   .rstn  (pwm_rstn),
+//   // configuration
+//   .cfg   ({pwm_cfg_d, pwm_cfg_c, pwm_cfg_b, pwm_cfg_a}),
+//   // PWM outputs
+//   .pwm_o (dac_pwm_o),
+//   .pwm_s ()
+// );
 
 //---------------------------------------------------------------------------------
 //  Daisy chain

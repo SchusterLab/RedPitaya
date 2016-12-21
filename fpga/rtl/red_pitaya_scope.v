@@ -339,7 +339,7 @@ always @(posedge adc_clk_i) begin
    ym1 <= conv_buf_12[ss_cnt];
    xd1 <= conv_buf_21[ss_cnt];
    yd1 <= conv_buf_22[ss_cnt];
-   if (adc_rst_do) begin
+   if (adc_rstn_i == 1'b0) begin
 
       adc_a_score   <= 32'h0 ;
       adc_b_score   <= 32'h0 ;
@@ -921,7 +921,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd44                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd45                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

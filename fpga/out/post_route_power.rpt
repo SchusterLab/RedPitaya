@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Tue Dec 20 22:16:06 2016
+| Date             : Tue Dec 20 23:34:07 2016
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : 
 | Design           : red_pitaya_top
@@ -30,7 +30,7 @@ Table of Contents
 ----------
 
 +--------------------------+-------+
-| Total On-Chip Power (W)  | 1.801 |
+| Total On-Chip Power (W)  | 1.800 |
 | Dynamic (W)              | 1.657 |
 | Device Static (W)        | 0.143 |
 | Effective TJA (C/W)      | 11.5  |
@@ -49,16 +49,16 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.025 |       13 |       --- |             --- |
-| Slice Logic              |     0.016 |     8416 |       --- |             --- |
-|   LUT as Logic           |     0.013 |     3148 |     17600 |           17.89 |
+| Clocks                   |     0.024 |       13 |       --- |             --- |
+| Slice Logic              |     0.016 |     8423 |       --- |             --- |
+|   LUT as Logic           |     0.013 |     3146 |     17600 |           17.88 |
 |   CARRY4                 |     0.001 |      321 |      4400 |            7.30 |
-|   Register               |    <0.001 |     3556 |     35200 |           10.10 |
+|   Register               |    <0.001 |     3570 |     35200 |           10.14 |
 |   LUT as Distributed RAM |    <0.001 |      160 |      6000 |            2.67 |
-|   F7/F8 Muxes            |    <0.001 |       10 |     17600 |            0.06 |
+|   F7/F8 Muxes            |    <0.001 |        7 |     17600 |            0.04 |
 |   LUT as Shift Register  |    <0.001 |       63 |      6000 |            1.05 |
 |   Others                 |     0.000 |      227 |       --- |             --- |
-| Signals                  |     0.029 |     7160 |       --- |             --- |
+| Signals                  |     0.029 |     7175 |       --- |             --- |
 | Block RAM                |     0.089 |       50 |        60 |           83.33 |
 | PLL                      |     0.097 |        1 |         2 |           50.00 |
 | DSPs                     |     0.016 |       14 |        80 |           17.50 |
@@ -66,7 +66,7 @@ Table of Contents
 | XADC                     |     0.004 |        1 |       --- |             --- |
 | PS7                      |     1.292 |        1 |       --- |             --- |
 | Static Power             |     0.143 |          |           |                 |
-| Total                    |     1.801 |          |           |                 |
+| Total                    |     1.800 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -76,7 +76,7 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
-| Vccint    |       1.000 |     0.183 |       0.174 |      0.009 |
+| Vccint    |       1.000 |     0.182 |       0.173 |      0.009 |
 | Vccaux    |       1.800 |     0.066 |       0.054 |      0.012 |
 | Vcco33    |       3.300 |     0.027 |       0.026 |      0.001 |
 | Vcco25    |       2.500 |     0.001 |       0.000 |      0.001 |
@@ -177,7 +177,7 @@ Table of Contents
 |   i_iobufp[5]                                                                    |    <0.001 |
 |   i_iobufp[6]                                                                    |    <0.001 |
 |   i_iobufp[7]                                                                    |    <0.001 |
-|   i_ps                                                                           |     1.321 |
+|   i_ps                                                                           |     1.320 |
 |     axi_master[0]                                                                |     0.002 |
 |       axi_awfifo_reg_0_15_0_5                                                    |    <0.001 |
 |       axi_awfifo_reg_0_15_12_17                                                  |    <0.001 |
@@ -238,11 +238,11 @@ Table of Contents
 |                 ar_cmd_fsm_0                                                     |    <0.001 |
 |                 cmd_translator_0                                                 |     0.002 |
 |                   incr_cmd_0                                                     |    <0.001 |
-|                   wrap_cmd_0                                                     |     0.001 |
+|                   wrap_cmd_0                                                     |    <0.001 |
 |               RD.r_channel_0                                                     |     0.002 |
 |                 rd_data_fifo_0                                                   |     0.001 |
 |                 transaction_fifo_0                                               |    <0.001 |
-|               SI_REG                                                             |     0.004 |
+|               SI_REG                                                             |     0.003 |
 |                 ar_pipe                                                          |    <0.001 |
 |                 aw_pipe                                                          |     0.001 |
 |                 axi_infrastructure_v1_1_0_axi2vector_0                           |     0.000 |

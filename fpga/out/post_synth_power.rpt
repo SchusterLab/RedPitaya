@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Tue Dec 20 22:09:49 2016
+| Date             : Tue Dec 20 23:28:25 2016
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : report_power -file out/post_synth_power.rpt
 | Design           : red_pitaya_top
@@ -49,17 +49,17 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.038 |       15 |       --- |             --- |
-| Slice Logic              |     0.021 |     9061 |       --- |             --- |
-|   LUT as Logic           |     0.017 |     3602 |     17600 |           20.47 |
+| Clocks                   |     0.039 |       15 |       --- |             --- |
+| Slice Logic              |     0.021 |     9067 |       --- |             --- |
+|   LUT as Logic           |     0.017 |     3598 |     17600 |           20.44 |
 |   CARRY4                 |     0.002 |      321 |      4400 |            7.30 |
-|   Register               |    <0.001 |     3719 |     35200 |           10.57 |
+|   Register               |    <0.001 |     3732 |     35200 |           10.60 |
 |   LUT as Distributed RAM |    <0.001 |      160 |      6000 |            2.67 |
 |   LUT as Shift Register  |    <0.001 |       71 |      6000 |            1.18 |
-|   F7/F8 Muxes            |    <0.001 |       10 |     17600 |            0.06 |
+|   F7/F8 Muxes            |    <0.001 |        7 |     17600 |            0.04 |
 |   Others                 |     0.000 |      247 |       --- |             --- |
 |   BUFG                   |     0.000 |        2 |        32 |            6.25 |
-| Signals                  |     0.029 |     8227 |       --- |             --- |
+| Signals                  |     0.029 |     8237 |       --- |             --- |
 | Block RAM                |     0.167 |       50 |        60 |           83.33 |
 | PLL                      |     0.097 |        1 |         2 |           50.00 |
 | DSPs                     |     0.015 |       14 |        80 |           17.50 |

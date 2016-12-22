@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date         : Wed Dec 21 16:50:46 2016
+| Date         : Thu Dec 22 13:31:01 2016
 | Host         : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command      : report_timing_summary -file out/post_route_timing_summary.rpt
 | Design       : red_pitaya_top
@@ -126,7 +126,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-     -0.381       -0.634                      2                13274       -2.163      -58.853                     28                13274        1.000        0.000                       0                  4128  
+     -0.381       -0.634                      2                13274        0.012        0.000                      0                13274        1.000        0.000                       0                  4128  
 
 
 Timing constraints are not met.
@@ -161,7 +161,7 @@ Clock                 WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total End
 -----                 -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
 adc_clk                                                                                                                                                             2.000        0.000                       0                     1  
   clk_fb                                                                                                                                                            6.751        0.000                       0                     2  
-  pll_adc_clk           0.137        0.000                      0                11395        0.055        0.000                      0                11395        2.750        0.000                       0                  3244  
+  pll_adc_clk           0.137        0.000                      0                11395        0.012        0.000                      0                11395        2.750        0.000                       0                  3244  
   pll_dac_clk_1x        1.477        0.000                      0                    2        0.382        0.000                      0                    2        3.500        0.000                       0                    19  
   pll_dac_clk_2p                                                                                                                                                    1.845        0.000                       0                     3  
   pll_dac_clk_2x                                                                                                                                                    1.845        0.000                       0                     3  
@@ -175,7 +175,7 @@ clk_fpga_3             -0.381       -0.634                      2               
 
 From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
 ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
-adc_clk       pll_adc_clk         5.940        0.000                      0                   28       -2.163      -58.853                     28                   28  
+adc_clk       pll_adc_clk         3.340        0.000                      0                   28        0.437        0.000                      0                   28  
 
 
 ------------------------------------------------------------------------------------------------
@@ -246,7 +246,7 @@ From Clock:  pll_adc_clk
   To Clock:  pll_adc_clk
 
 Setup :            0  Failing Endpoints,  Worst Slack        0.137ns,  Total Violation        0.000ns
-Hold  :            0  Failing Endpoints,  Worst Slack        0.055ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.012ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        2.750ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
@@ -329,20 +329,20 @@ Slack (MET) :             0.137ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             0.055ns  (arrival time - required time)
-  Source:                 i_scope/axi_b_dat_reg[25]/C
+Slack (MET) :             0.012ns  (arrival time - required time)
+  Source:                 i_scope/ss_cnt_reg_rep[1]/C
                             (rising edge-triggered cell FDRE clocked by pll_adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
-  Destination:            i_scope/i_wr1/fifo_reg/DIADI[25]
+  Destination:            i_scope/conv_buf_21_reg_1/ADDRBWRADDR[3]
                             (rising edge-triggered cell RAMB36E1 clocked by pll_adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
   Path Group:             pll_adc_clk
   Path Type:              Hold (Min at Fast Process Corner)
   Requirement:            0.000ns  (pll_adc_clk rise@0.000ns - pll_adc_clk rise@0.000ns)
-  Data Path Delay:        0.270ns  (logic 0.164ns (60.728%)  route 0.106ns (39.272%))
+  Data Path Delay:        0.507ns  (logic 0.141ns (27.815%)  route 0.366ns (72.185%))
   Logic Levels:           0  
-  Clock Path Skew:        0.060ns (DCD - SCD - CPR)
-    Destination Clock Delay (DCD):    2.410ns
-    Source Clock Delay      (SCD):    1.972ns
-    Clock Pessimism Removal (CPR):    0.378ns
+  Clock Path Skew:        0.312ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    2.414ns
+    Source Clock Delay      (SCD):    1.977ns
+    Clock Pessimism Removal (CPR):    0.125ns
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
@@ -356,12 +356,12 @@ Slack (MET) :             0.055ns  (arrival time - required time)
                                                       0.051     0.893 r  pll/pll/CLKOUT0
                          net (fo=1, routed)           0.497     1.390    pll_adc_clk
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.026     1.416 r  bufg_adc_clk/O
-                         net (fo=3253, routed)        0.557     1.972    i_scope/adc_clk_i
-    SLICE_X6Y20          FDRE                                         r  i_scope/axi_b_dat_reg[25]/C
+                         net (fo=3253, routed)        0.562     1.977    i_scope/adc_clk_i
+    SLICE_X26Y42         FDRE                                         r  i_scope/ss_cnt_reg_rep[1]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X6Y20          FDRE (Prop_fdre_C_Q)         0.164     2.136 r  i_scope/axi_b_dat_reg[25]/Q
-                         net (fo=1, routed)           0.106     2.242    i_scope/i_wr1/wr_data_i[25]
-    RAMB36_X0Y3          RAMB36E1                                     r  i_scope/i_wr1/fifo_reg/DIADI[25]
+    SLICE_X26Y42         FDRE (Prop_fdre_C_Q)         0.141     2.118 r  i_scope/ss_cnt_reg_rep[1]/Q
+                         net (fo=4, routed)           0.366     2.484    i_scope/ss_cnt_reg_rep_n_0_[1]
+    RAMB36_X1Y10         RAMB36E1                                     r  i_scope/conv_buf_21_reg_1/ADDRBWRADDR[3]
   -------------------------------------------------------------------    -------------------
 
                          (clock pll_adc_clk rise edge)
@@ -374,16 +374,16 @@ Slack (MET) :             0.055ns  (arrival time - required time)
                                                       0.054     0.968 r  pll/pll/CLKOUT0
                          net (fo=1, routed)           0.544     1.512    pll_adc_clk
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     1.541 r  bufg_adc_clk/O
-                         net (fo=3253, routed)        0.869     2.410    i_scope/i_wr1/axi_clk_i
-    RAMB36_X0Y3          RAMB36E1                                     r  i_scope/i_wr1/fifo_reg/CLKBWRCLK
-                         clock pessimism             -0.378     2.033    
-    RAMB36_X0Y3          RAMB36E1 (Hold_ramb36e1_CLKBWRCLK_DIADI[25])
-                                                      0.155     2.188    i_scope/i_wr1/fifo_reg
+                         net (fo=3253, routed)        0.873     2.414    i_scope/adc_clk_i
+    RAMB36_X1Y10         RAMB36E1                                     r  i_scope/conv_buf_21_reg_1/CLKBWRCLK
+                         clock pessimism             -0.125     2.289    
+    RAMB36_X1Y10         RAMB36E1 (Hold_ramb36e1_CLKBWRCLK_ADDRBWRADDR[3])
+                                                      0.183     2.472    i_scope/conv_buf_21_reg_1
   -------------------------------------------------------------------
-                         required time                         -2.188    
-                         arrival time                           2.242    
+                         required time                         -2.472    
+                         arrival time                           2.484    
   -------------------------------------------------------------------
-                         slack                                  0.055    
+                         slack                                  0.012    
 
 
 
@@ -759,14 +759,14 @@ High Pulse Width  Fast    SRLC32E/CLK  n/a            0.980         2.500       
 From Clock:  adc_clk
   To Clock:  pll_adc_clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        5.940ns,  Total Violation        0.000ns
-Hold  :           28  Failing Endpoints,  Worst Slack       -2.163ns,  Total Violation      -58.853ns
+Setup :            0  Failing Endpoints,  Worst Slack        3.340ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.437ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             5.940ns  (required time - arrival time)
+Slack (MET) :             3.340ns  (required time - arrival time)
   Source:                 adc_dat_a_i[7]
                             (input port clocked by adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
   Destination:            adc_dat_a_reg[5]/D
@@ -776,7 +776,7 @@ Slack (MET) :             5.940ns  (required time - arrival time)
   Requirement:            8.000ns  (pll_adc_clk rise@8.000ns - adc_clk rise@0.000ns)
   Data Path Delay:        0.488ns  (logic 0.488ns (100.000%)  route 0.000ns (0.000%))
   Logic Levels:           1  (IBUF=1)
-  Input Delay:            3.400ns
+  Input Delay:            6.000ns
   Clock Path Skew:        1.995ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    1.995ns = ( 9.995 - 8.000 ) 
     Source Clock Delay      (SCD):    0.000ns
@@ -789,11 +789,11 @@ Slack (MET) :             5.940ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock adc_clk rise edge)    0.000     0.000 r  
-                         input delay                  3.400     3.400    
-    Y14                                               0.000     3.400 r  adc_dat_a_i[7] (IN)
-                         net (fo=0)                   0.000     3.400    adc_dat_a_i[7]
-    Y14                  IBUF (Prop_ibuf_I_O)         0.488     3.888 r  adc_dat_a_i_IBUF[7]_inst/O
-                         net (fo=1, routed)           0.000     3.888    adc_dat_a_i_IBUF[7]
+                         input delay                  6.000     6.000    
+    Y14                                               0.000     6.000 r  adc_dat_a_i[7] (IN)
+                         net (fo=0)                   0.000     6.000    adc_dat_a_i[7]
+    Y14                  IBUF (Prop_ibuf_I_O)         0.488     6.488 r  adc_dat_a_i_IBUF[7]_inst/O
+                         net (fo=1, routed)           0.000     6.488    adc_dat_a_i_IBUF[7]
     ILOGIC_X0Y33         FDRE                                         r  adc_dat_a_reg[5]/D
   -------------------------------------------------------------------    -------------------
 
@@ -814,9 +814,9 @@ Slack (MET) :             5.940ns  (required time - arrival time)
     ILOGIC_X0Y33         FDRE (Setup_fdre_C_D)       -0.001     9.828    adc_dat_a_reg[5]
   -------------------------------------------------------------------
                          required time                          9.828    
-                         arrival time                          -3.888    
+                         arrival time                          -6.488    
   -------------------------------------------------------------------
-                         slack                                  5.940    
+                         slack                                  3.340    
 
 
 
@@ -824,7 +824,7 @@ Slack (MET) :             5.940ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (VIOLATED) :        -2.163ns  (arrival time - required time)
+Slack (MET) :             0.437ns  (arrival time - required time)
   Source:                 adc_dat_b_i[3]
                             (input port clocked by adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
   Destination:            adc_dat_b_reg[1]/D
@@ -834,7 +834,7 @@ Slack (VIOLATED) :        -2.163ns  (arrival time - required time)
   Requirement:            0.000ns  (pll_adc_clk rise@0.000ns - adc_clk rise@0.000ns)
   Data Path Delay:        0.805ns  (logic 0.805ns (100.000%)  route 0.000ns (0.000%))
   Logic Levels:           1  (IBUF=1)
-  Input Delay:            3.400ns
+  Input Delay:            6.000ns
   Clock Path Skew:        6.011ns (DCD - SCD - CPR)
     Destination Clock Delay (DCD):    6.011ns
     Source Clock Delay      (SCD):    0.000ns
@@ -847,11 +847,11 @@ Slack (VIOLATED) :        -2.163ns  (arrival time - required time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock adc_clk rise edge)    0.000     0.000 r  
-                         input delay                  3.400     3.400    
-    P16                                               0.000     3.400 r  adc_dat_b_i[3] (IN)
-                         net (fo=0)                   0.000     3.400    adc_dat_b_i[3]
-    P16                  IBUF (Prop_ibuf_I_O)         0.805     4.205 r  adc_dat_b_i_IBUF[3]_inst/O
-                         net (fo=1, routed)           0.000     4.205    adc_dat_b_i_IBUF[3]
+                         input delay                  6.000     6.000    
+    P16                                               0.000     6.000 r  adc_dat_b_i[3] (IN)
+                         net (fo=0)                   0.000     6.000    adc_dat_b_i[3]
+    P16                  IBUF (Prop_ibuf_I_O)         0.805     6.805 r  adc_dat_b_i_IBUF[3]_inst/O
+                         net (fo=1, routed)           0.000     6.805    adc_dat_b_i_IBUF[3]
     ILOGIC_X0Y1          FDRE                                         r  adc_dat_b_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
@@ -872,9 +872,9 @@ Slack (VIOLATED) :        -2.163ns  (arrival time - required time)
     ILOGIC_X0Y1          FDRE (Hold_fdre_C_D)         0.192     6.368    adc_dat_b_reg[1]
   -------------------------------------------------------------------
                          required time                         -6.368    
-                         arrival time                           4.205    
+                         arrival time                           6.805    
   -------------------------------------------------------------------
-                         slack                                 -2.163    
+                         slack                                  0.437    
 
 
 

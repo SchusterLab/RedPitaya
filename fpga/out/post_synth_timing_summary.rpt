@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date         : Wed Dec 21 16:49:54 2016
+| Date         : Thu Dec 22 13:30:08 2016
 | Host         : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command      : report_timing_summary -file out/post_synth_timing_summary.rpt
 | Design       : red_pitaya_top
@@ -182,7 +182,7 @@ clk_fpga_3             -0.672       -7.570                     20               
 
 From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
 ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
-adc_clk       pll_adc_clk         5.085        0.000                      0                   28        0.490        0.000                      0                   28  
+adc_clk       pll_adc_clk         2.485        0.000                      0                   28        3.090        0.000                      0                   28  
 
 
 ------------------------------------------------------------------------------------------------
@@ -883,14 +883,14 @@ High Pulse Width  Fast    SRLC32E/CLK  n/a            0.980         2.500       
 From Clock:  adc_clk
   To Clock:  pll_adc_clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        5.085ns,  Total Violation        0.000ns
-Hold  :            0  Failing Endpoints,  Worst Slack        0.490ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        2.485ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        3.090ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             5.085ns  (required time - arrival time)
+Slack (MET) :             2.485ns  (required time - arrival time)
   Source:                 adc_dat_a_i[7]
                             (input port clocked by adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
   Destination:            adc_dat_a_reg[5]/D
@@ -900,7 +900,7 @@ Slack (MET) :             5.085ns  (required time - arrival time)
   Requirement:            8.000ns  (pll_adc_clk rise@8.000ns - adc_clk rise@0.000ns)
   Data Path Delay:        0.488ns  (logic 0.488ns (100.000%)  route 0.000ns (0.000%))
   Logic Levels:           1  (IBUF=1)
-  Input Delay:            3.400ns
+  Input Delay:            6.000ns
   Clock Path Skew:        1.140ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    1.140ns = ( 9.140 - 8.000 ) 
     Source Clock Delay      (SCD):    0.000ns
@@ -913,11 +913,11 @@ Slack (MET) :             5.085ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock adc_clk rise edge)    0.000     0.000 r  
-                         input delay                  3.400     3.400    
-    Y14                                               0.000     3.400 r  adc_dat_a_i[7] (IN)
-                         net (fo=0)                   0.000     3.400    adc_dat_a_i[7]
-    Y14                  IBUF (Prop_ibuf_I_O)         0.488     3.888 r  adc_dat_a_i_IBUF[7]_inst/O
-                         net (fo=1, estimated)        0.000     3.888    adc_dat_a_i_IBUF[7]
+                         input delay                  6.000     6.000    
+    Y14                                               0.000     6.000 r  adc_dat_a_i[7] (IN)
+                         net (fo=0)                   0.000     6.000    adc_dat_a_i[7]
+    Y14                  IBUF (Prop_ibuf_I_O)         0.488     6.488 r  adc_dat_a_i_IBUF[7]_inst/O
+                         net (fo=1, estimated)        0.000     6.488    adc_dat_a_i_IBUF[7]
     ILOGIC_X0Y33         FDRE                                         r  adc_dat_a_reg[5]/D
   -------------------------------------------------------------------    -------------------
 
@@ -938,9 +938,9 @@ Slack (MET) :             5.085ns  (required time - arrival time)
     ILOGIC_X0Y33         FDRE (Setup_fdre_C_D)       -0.001     8.973    adc_dat_a_reg[5]
   -------------------------------------------------------------------
                          required time                          8.973    
-                         arrival time                          -3.888    
+                         arrival time                          -6.488    
   -------------------------------------------------------------------
-                         slack                                  5.085    
+                         slack                                  2.485    
 
 
 
@@ -948,7 +948,7 @@ Slack (MET) :             5.085ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             0.490ns  (arrival time - required time)
+Slack (MET) :             3.090ns  (arrival time - required time)
   Source:                 adc_dat_b_i[3]
                             (input port clocked by adc_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
   Destination:            adc_dat_b_reg[1]/D
@@ -958,7 +958,7 @@ Slack (MET) :             0.490ns  (arrival time - required time)
   Requirement:            0.000ns  (pll_adc_clk rise@0.000ns - adc_clk rise@0.000ns)
   Data Path Delay:        0.805ns  (logic 0.805ns (100.000%)  route 0.000ns (0.000%))
   Logic Levels:           1  (IBUF=1)
-  Input Delay:            3.400ns
+  Input Delay:            6.000ns
   Clock Path Skew:        3.357ns (DCD - SCD - CPR)
     Destination Clock Delay (DCD):    3.357ns
     Source Clock Delay      (SCD):    0.000ns
@@ -971,11 +971,11 @@ Slack (MET) :             0.490ns  (arrival time - required time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock adc_clk rise edge)    0.000     0.000 r  
-                         input delay                  3.400     3.400    
-    P16                                               0.000     3.400 r  adc_dat_b_i[3] (IN)
-                         net (fo=0)                   0.000     3.400    adc_dat_b_i[3]
-    P16                  IBUF (Prop_ibuf_I_O)         0.805     4.205 r  adc_dat_b_i_IBUF[3]_inst/O
-                         net (fo=1, estimated)        0.000     4.205    adc_dat_b_i_IBUF[3]
+                         input delay                  6.000     6.000    
+    P16                                               0.000     6.000 r  adc_dat_b_i[3] (IN)
+                         net (fo=0)                   0.000     6.000    adc_dat_b_i[3]
+    P16                  IBUF (Prop_ibuf_I_O)         0.805     6.805 r  adc_dat_b_i_IBUF[3]_inst/O
+                         net (fo=1, estimated)        0.000     6.805    adc_dat_b_i_IBUF[3]
     ILOGIC_X0Y1          FDRE                                         r  adc_dat_b_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
@@ -996,9 +996,9 @@ Slack (MET) :             0.490ns  (arrival time - required time)
     ILOGIC_X0Y1          FDRE (Hold_fdre_C_D)         0.192     3.715    adc_dat_b_reg[1]
   -------------------------------------------------------------------
                          required time                         -3.715    
-                         arrival time                           4.205    
+                         arrival time                           6.805    
   -------------------------------------------------------------------
-                         slack                                  0.490    
+                         slack                                  3.090    
 
 
 

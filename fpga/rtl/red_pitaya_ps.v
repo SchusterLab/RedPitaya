@@ -428,47 +428,47 @@ system_wrapper system_i (
   .M_AXI_GP0_rid     (gp0_maxi_rid    ),  // in 12
   .M_AXI_GP0_bresp   (gp0_maxi_bresp  ),  // in 2
   .M_AXI_GP0_rresp   (gp0_maxi_rresp  ),  // in 2
-  .M_AXI_GP0_rdata   (gp0_maxi_rdata  ),  // in 32
+  .M_AXI_GP0_rdata   (gp0_maxi_rdata  )  // in 32
   // HP0                                  // HP1
-  .S_AXI_HP0_arready (hp0_saxi_arready),  .S_AXI_HP1_arready (hp1_saxi_arready), // out
-  .S_AXI_HP0_awready (hp0_saxi_awready),  .S_AXI_HP1_awready (hp1_saxi_awready), // out
-  .S_AXI_HP0_bvalid  (hp0_saxi_bvalid ),  .S_AXI_HP1_bvalid  (hp1_saxi_bvalid ), // out
-  .S_AXI_HP0_rlast   (hp0_saxi_rlast  ),  .S_AXI_HP1_rlast   (hp1_saxi_rlast  ), // out
-  .S_AXI_HP0_rvalid  (hp0_saxi_rvalid ),  .S_AXI_HP1_rvalid  (hp1_saxi_rvalid ), // out
-  .S_AXI_HP0_wready  (hp0_saxi_wready ),  .S_AXI_HP1_wready  (hp1_saxi_wready ), // out
-  .S_AXI_HP0_bresp   (hp0_saxi_bresp  ),  .S_AXI_HP1_bresp   (hp1_saxi_bresp  ), // out 2
-  .S_AXI_HP0_rresp   (hp0_saxi_rresp  ),  .S_AXI_HP1_rresp   (hp1_saxi_rresp  ), // out 2
-  .S_AXI_HP0_bid     (hp0_saxi_bid    ),  .S_AXI_HP1_bid     (hp1_saxi_bid    ), // out 6
-  .S_AXI_HP0_rid     (hp0_saxi_rid    ),  .S_AXI_HP1_rid     (hp1_saxi_rid    ), // out 6
-  .S_AXI_HP0_rdata   (hp0_saxi_rdata  ),  .S_AXI_HP1_rdata   (hp1_saxi_rdata  ), // out 64
-  .S_AXI_HP0_aclk    (hp0_saxi_aclk   ),  .S_AXI_HP1_aclk    (hp1_saxi_aclk   ), // in
-  .S_AXI_HP0_arvalid (hp0_saxi_arvalid),  .S_AXI_HP1_arvalid (hp1_saxi_arvalid), // in
-  .S_AXI_HP0_awvalid (hp0_saxi_awvalid),  .S_AXI_HP1_awvalid (hp1_saxi_awvalid), // in
-  .S_AXI_HP0_bready  (hp0_saxi_bready ),  .S_AXI_HP1_bready  (hp1_saxi_bready ), // in
-  .S_AXI_HP0_rready  (hp0_saxi_rready ),  .S_AXI_HP1_rready  (hp1_saxi_rready ), // in
-  .S_AXI_HP0_wlast   (hp0_saxi_wlast  ),  .S_AXI_HP1_wlast   (hp1_saxi_wlast  ), // in
-  .S_AXI_HP0_wvalid  (hp0_saxi_wvalid ),  .S_AXI_HP1_wvalid  (hp1_saxi_wvalid ), // in
-  .S_AXI_HP0_arburst (hp0_saxi_arburst),  .S_AXI_HP1_arburst (hp1_saxi_arburst), // in 2
-  .S_AXI_HP0_arlock  (hp0_saxi_arlock ),  .S_AXI_HP1_arlock  (hp1_saxi_arlock ), // in 2
-  .S_AXI_HP0_arsize  (hp0_saxi_arsize ),  .S_AXI_HP1_arsize  (hp1_saxi_arsize ), // in 3
-  .S_AXI_HP0_awburst (hp0_saxi_awburst),  .S_AXI_HP1_awburst (hp1_saxi_awburst), // in 2
-  .S_AXI_HP0_awlock  (hp0_saxi_awlock ),  .S_AXI_HP1_awlock  (hp1_saxi_awlock ), // in 2
-  .S_AXI_HP0_awsize  (hp0_saxi_awsize ),  .S_AXI_HP1_awsize  (hp1_saxi_awsize ), // in 3
-  .S_AXI_HP0_arprot  (hp0_saxi_arprot ),  .S_AXI_HP1_arprot  (hp1_saxi_arprot ), // in 3
-  .S_AXI_HP0_awprot  (hp0_saxi_awprot ),  .S_AXI_HP1_awprot  (hp1_saxi_awprot ), // in 3
-  .S_AXI_HP0_araddr  (hp0_saxi_araddr ),  .S_AXI_HP1_araddr  (hp1_saxi_araddr ), // in 32
-  .S_AXI_HP0_awaddr  (hp0_saxi_awaddr ),  .S_AXI_HP1_awaddr  (hp1_saxi_awaddr ), // in 32
-  .S_AXI_HP0_arcache (hp0_saxi_arcache),  .S_AXI_HP1_arcache (hp1_saxi_arcache), // in 4
-  .S_AXI_HP0_arlen   (hp0_saxi_arlen  ),  .S_AXI_HP1_arlen   (hp1_saxi_arlen  ), // in 4
-  .S_AXI_HP0_arqos   (hp0_saxi_arqos  ),  .S_AXI_HP1_arqos   (hp1_saxi_arqos  ), // in 4
-  .S_AXI_HP0_awcache (hp0_saxi_awcache),  .S_AXI_HP1_awcache (hp1_saxi_awcache), // in 4
-  .S_AXI_HP0_awlen   (hp0_saxi_awlen  ),  .S_AXI_HP1_awlen   (hp1_saxi_awlen  ), // in 4
-  .S_AXI_HP0_awqos   (hp0_saxi_awqos  ),  .S_AXI_HP1_awqos   (hp1_saxi_awqos  ), // in 4
-  .S_AXI_HP0_arid    (hp0_saxi_arid   ),  .S_AXI_HP1_arid    (hp1_saxi_arid   ), // in 6
-  .S_AXI_HP0_awid    (hp0_saxi_awid   ),  .S_AXI_HP1_awid    (hp1_saxi_awid   ), // in 6
-  .S_AXI_HP0_wid     (hp0_saxi_wid    ),  .S_AXI_HP1_wid     (hp1_saxi_wid    ), // in 6
-  .S_AXI_HP0_wdata   (hp0_saxi_wdata  ),  .S_AXI_HP1_wdata   (hp1_saxi_wdata  ), // in 64
-  .S_AXI_HP0_wstrb   (hp0_saxi_wstrb  ),  .S_AXI_HP1_wstrb   (hp1_saxi_wstrb  )  // in 8
+  // .S_AXI_HP0_arready (hp0_saxi_arready),  .S_AXI_HP1_arready (hp1_saxi_arready), // out
+  // .S_AXI_HP0_awready (hp0_saxi_awready),  .S_AXI_HP1_awready (hp1_saxi_awready), // out
+  // .S_AXI_HP0_bvalid  (hp0_saxi_bvalid ),  .S_AXI_HP1_bvalid  (hp1_saxi_bvalid ), // out
+  // .S_AXI_HP0_rlast   (hp0_saxi_rlast  ),  .S_AXI_HP1_rlast   (hp1_saxi_rlast  ), // out
+  // .S_AXI_HP0_rvalid  (hp0_saxi_rvalid ),  .S_AXI_HP1_rvalid  (hp1_saxi_rvalid ), // out
+  // .S_AXI_HP0_wready  (hp0_saxi_wready ),  .S_AXI_HP1_wready  (hp1_saxi_wready ), // out
+  // .S_AXI_HP0_bresp   (hp0_saxi_bresp  ),  .S_AXI_HP1_bresp   (hp1_saxi_bresp  ), // out 2
+  // .S_AXI_HP0_rresp   (hp0_saxi_rresp  ),  .S_AXI_HP1_rresp   (hp1_saxi_rresp  ), // out 2
+  // .S_AXI_HP0_bid     (hp0_saxi_bid    ),  .S_AXI_HP1_bid     (hp1_saxi_bid    ), // out 6
+  // .S_AXI_HP0_rid     (hp0_saxi_rid    ),  .S_AXI_HP1_rid     (hp1_saxi_rid    ), // out 6
+  // .S_AXI_HP0_rdata   (hp0_saxi_rdata  ),  .S_AXI_HP1_rdata   (hp1_saxi_rdata  ), // out 64
+  // .S_AXI_HP0_aclk    (hp0_saxi_aclk   ),  .S_AXI_HP1_aclk    (hp1_saxi_aclk   ), // in
+  // .S_AXI_HP0_arvalid (hp0_saxi_arvalid),  .S_AXI_HP1_arvalid (hp1_saxi_arvalid), // in
+  // .S_AXI_HP0_awvalid (hp0_saxi_awvalid),  .S_AXI_HP1_awvalid (hp1_saxi_awvalid), // in
+  // .S_AXI_HP0_bready  (hp0_saxi_bready ),  .S_AXI_HP1_bready  (hp1_saxi_bready ), // in
+  // .S_AXI_HP0_rready  (hp0_saxi_rready ),  .S_AXI_HP1_rready  (hp1_saxi_rready ), // in
+  // .S_AXI_HP0_wlast   (hp0_saxi_wlast  ),  .S_AXI_HP1_wlast   (hp1_saxi_wlast  ), // in
+  // .S_AXI_HP0_wvalid  (hp0_saxi_wvalid ),  .S_AXI_HP1_wvalid  (hp1_saxi_wvalid ), // in
+  // .S_AXI_HP0_arburst (hp0_saxi_arburst),  .S_AXI_HP1_arburst (hp1_saxi_arburst), // in 2
+  // .S_AXI_HP0_arlock  (hp0_saxi_arlock ),  .S_AXI_HP1_arlock  (hp1_saxi_arlock ), // in 2
+  // .S_AXI_HP0_arsize  (hp0_saxi_arsize ),  .S_AXI_HP1_arsize  (hp1_saxi_arsize ), // in 3
+  // .S_AXI_HP0_awburst (hp0_saxi_awburst),  .S_AXI_HP1_awburst (hp1_saxi_awburst), // in 2
+  // .S_AXI_HP0_awlock  (hp0_saxi_awlock ),  .S_AXI_HP1_awlock  (hp1_saxi_awlock ), // in 2
+  // .S_AXI_HP0_awsize  (hp0_saxi_awsize ),  .S_AXI_HP1_awsize  (hp1_saxi_awsize ), // in 3
+  // .S_AXI_HP0_arprot  (hp0_saxi_arprot ),  .S_AXI_HP1_arprot  (hp1_saxi_arprot ), // in 3
+  // .S_AXI_HP0_awprot  (hp0_saxi_awprot ),  .S_AXI_HP1_awprot  (hp1_saxi_awprot ), // in 3
+  // .S_AXI_HP0_araddr  (hp0_saxi_araddr ),  .S_AXI_HP1_araddr  (hp1_saxi_araddr ), // in 32
+  // .S_AXI_HP0_awaddr  (hp0_saxi_awaddr ),  .S_AXI_HP1_awaddr  (hp1_saxi_awaddr ), // in 32
+  // .S_AXI_HP0_arcache (hp0_saxi_arcache),  .S_AXI_HP1_arcache (hp1_saxi_arcache), // in 4
+  // .S_AXI_HP0_arlen   (hp0_saxi_arlen  ),  .S_AXI_HP1_arlen   (hp1_saxi_arlen  ), // in 4
+  // .S_AXI_HP0_arqos   (hp0_saxi_arqos  ),  .S_AXI_HP1_arqos   (hp1_saxi_arqos  ), // in 4
+  // .S_AXI_HP0_awcache (hp0_saxi_awcache),  .S_AXI_HP1_awcache (hp1_saxi_awcache), // in 4
+  // .S_AXI_HP0_awlen   (hp0_saxi_awlen  ),  .S_AXI_HP1_awlen   (hp1_saxi_awlen  ), // in 4
+  // .S_AXI_HP0_awqos   (hp0_saxi_awqos  ),  .S_AXI_HP1_awqos   (hp1_saxi_awqos  ), // in 4
+  // .S_AXI_HP0_arid    (hp0_saxi_arid   ),  .S_AXI_HP1_arid    (hp1_saxi_arid   ), // in 6
+  // .S_AXI_HP0_awid    (hp0_saxi_awid   ),  .S_AXI_HP1_awid    (hp1_saxi_awid   ), // in 6
+  // .S_AXI_HP0_wid     (hp0_saxi_wid    ),  .S_AXI_HP1_wid     (hp1_saxi_wid    ), // in 6
+  // .S_AXI_HP0_wdata   (hp0_saxi_wdata  ),  .S_AXI_HP1_wdata   (hp1_saxi_wdata  ), // in 64
+  // .S_AXI_HP0_wstrb   (hp0_saxi_wstrb  ),  .S_AXI_HP1_wstrb   (hp1_saxi_wstrb  )  // in 8
 );
 
 endmodule

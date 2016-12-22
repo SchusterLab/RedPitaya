@@ -995,8 +995,8 @@ always @(posedge adc_clk_i) begin
    conv_raddr       <= sys_addr[RSZ+1:2] ; // address synchronous to clock
    conv_raddr_2     <= sys_addr[RSZ+1:2] ; // address synchronous to clock
    conv_11_raddr    <= conv_raddr     ; // double register 
-   conv_12_raddr    <= conv_raddr_2     ; // otherwise memory corruption at reading
-   conv_21_raddr    <= conv_raddr     ; // double register 
+   conv_12_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
+   conv_21_raddr    <= conv_raddr_2     ; // double register 
    conv_22_raddr    <= conv_raddr_2     ; // otherwise memory corruption at reading
 end
 

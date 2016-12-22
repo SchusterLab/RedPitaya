@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date              : Thu Dec 22 14:49:42 2016
+| Date              : Thu Dec 22 15:09:22 2016
 | Host              : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command           : report_clock_utilization -file out/clock_util.rpt
 | Design            : red_pitaya_top
@@ -54,7 +54,7 @@ Table of Contents
 |     2 | bufg_dac_clk_2x                                                                  | dac_clk_2x                                               |    1 |     1 |    no |
 |     3 | bufg_dac_clk_1x                                                                  | dac_clk_1x                                               |   17 |    17 |    no |
 |     4 | i_ps/system_i/system_i/processing_system7/inst/buffer_fclk_clk_3.FCLK_CLK_3_BUFG | i_ps/system_i/system_i/processing_system7/inst/FCLK_CLK3 |  857 |   257 |    no |
-|     5 | bufg_adc_clk                                                                     | adc_clk                                                  | 2397 |   898 |    no |
+|     5 | bufg_adc_clk                                                                     | adc_clk                                                  | 2397 |   896 |    no |
 +-------+----------------------------------------------------------------------------------+----------------------------------------------------------+------+-------+-------+
 
 

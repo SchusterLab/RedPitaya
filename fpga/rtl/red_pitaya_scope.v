@@ -384,11 +384,11 @@ always @(posedge adc_clk_i) begin
         adc_b_score   <= 32'h0 ;
       end
    end
-   else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
-      t3 <= 1'b1;      
-      adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
-      adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
-   end 
+   // else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
+   //    t3 <= 1'b1;      
+   //    adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
+   //    adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
+   // end 
    else if (adc_we && adc_dv && avg_mode) begin
       t4 <= 1'b1;
       adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
@@ -934,7 +934,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd53                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd55                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
@@ -974,7 +974,7 @@ reg   [  16-1: 0] conv_buf_22 [0:(1<<RSZ)-1] ;   //Convolution buffers
 
 reg               conv_buf_11_we, conv_buf_12_we     ; //Write enable for A and B
 reg               conv_buf_21_we, conv_buf_22_we     ; //Write enable for A and B
-reg   [ RSZ-1: 0] conv_raddr, conv_raddr_2;
+reg   [ RSZ-1: 0] conv_raddr;
 reg   [ RSZ-1: 0] conv_11_raddr, conv_12_raddr,conv_21_raddr, conv_22_raddr  ;               //Address within conv_buf (a or b)
 reg   [  16-1: 0] conv_buf_rdata_11, conv_buf_rdata_12, conv_buf_rdata_21, conv_buf_rdata_22;
 
@@ -993,11 +993,10 @@ always @(posedge adc_clk_i) begin
    conv_buf_21_we   <= sys_wen && (sys_addr[19:16] == 'h5);
    conv_buf_22_we   <= sys_wen && (sys_addr[19:16] == 'h6); 
    conv_raddr       <= sys_addr[RSZ+1:2] ; // address synchronous to clock
-   conv_raddr_2     <= sys_addr[RSZ+1:2] ; // address synchronous to clock
    conv_11_raddr    <= conv_raddr     ; // double register 
    conv_12_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
-   conv_21_raddr    <= conv_raddr_2     ; // double register 
-   conv_22_raddr    <= conv_raddr_2     ; // otherwise memory corruption at reading
+   conv_21_raddr    <= conv_raddr     ; // double register 
+   conv_22_raddr    <= conv_raddr     ; // otherwise memory corruption at reading
 end
 
 // read

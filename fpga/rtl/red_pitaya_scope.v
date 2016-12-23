@@ -206,6 +206,7 @@ reg               adc_trig      ;   //adc trigger bit (set from trigger code bel
 
 reg   [  32-1: 0] adc_wp_trig   ;   //write pointer at when triggered
 reg   [  32-1: 0] adc_wp_cur    ;   //Current write pointer
+reg   [  32-1: 0] adc_wp_cur_2  ;   //Current write pointer 2
 reg   [  32-1: 0] set_dly       ;   //delay count (# of samples from bus)
 reg   [  32-1: 0] adc_we_cnt    ;   //counter of how many samples written before trigger
 reg   [  32-1: 0] adc_dly_cnt   ;   //counter which counts from set_dly to 0
@@ -245,6 +246,7 @@ always @(posedge adc_clk_i) begin
       adc_we      <=  1'b0      ;
       adc_wp_trig <= 32'h0      ;
       adc_wp_cur  <= 32'h0      ;
+      adc_wp_cur_2  <= 32'h0      ;
       adc_we_cnt  <= 32'h0      ;
       adc_dly_cnt <= 32'h0      ;
       adc_dly_do  <=  1'b0      ;
@@ -308,6 +310,10 @@ always @(posedge adc_clk_i) begin
       else if (adc_we && adc_dv )
          adc_wp_cur <= adc_wp ;             // save current write pointer
 
+      if (adc_rst_do || !adc_we)
+         adc_wp_cur_2 <= 32'h0;
+      else if (adc_we && adc_dv )
+         adc_wp_cur_2 <= adc_wp + 1 ; 
 
       if (adc_trig)
          adc_dly_do  <= 1'b1 ;
@@ -329,8 +335,8 @@ always @(posedge adc_clk_i) begin
 end
 
 always @(posedge adc_clk_i) begin
-   adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
-   adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
+   adc_a_buf_tmp <= adc_a_buf[adc_wp_cur_2[RSZ-1:0]];
+   adc_b_buf_tmp <= adc_b_buf[adc_wp_cur_2[RSZ-1:0]];
    xm <= xm1;
    ym <= ym1;
    xd <= xd1;

@@ -224,6 +224,10 @@ reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
 
 reg               ss_mode,ss_2ch;   //1 if single shot mode
 reg   [ RSZ-1: 0] ss_cnt        ;   //Counter for single shot mode
+reg   [ RSZ-1: 0] ss_cnt_1        ;   //Counter for single shot mode
+reg   [ RSZ-1: 0] ss_cnt_2        ;   //Counter for single shot mode
+reg   [ RSZ-1: 0] ss_cnt_3        ;   //Counter for single shot mode
+reg   [ RSZ-1: 0] ss_cnt_4        ;   //Counter for single shot mode
 
 reg               adc_trigged   ;   //debugging to see if it started writing
 reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
@@ -346,42 +350,40 @@ always @(posedge adc_clk_i) begin
       begin
          adc_dly_cnt <= adc_dly_cnt - 1;    //decrement adc_dly_cnt
          ss_cnt <= ss_cnt + 1; 
+         ss_cnt_1 <= ss_cnt_1 + 1; 
+         ss_cnt_2 <= ss_cnt_2 + 1; 
+         ss_cnt_3 <= ss_cnt_3 + 1; 
+         ss_cnt_4 <= ss_cnt_4 + 1; 
       end
       else if (!adc_dly_do)
       begin
          adc_dly_cnt <= set_dly ;           //set adc_dly_cnt to initial value
          ss_cnt <= {RSZ{1'b0}};
+         ss_cnt_1 <= {RSZ{1'b0}};
+         ss_cnt_2 <= {RSZ{1'b0}};
+         ss_cnt_3 <= {RSZ{1'b0}};
+         ss_cnt_4 <= {RSZ{1'b0}};
       end
 
    end
 end
 
 always @(posedge adc_clk_i) begin
-   xm <= xm1;
-   ym <= ym1;
-   xd <= xd1;
-   yd <= yd1;
-   xm1 <= conv_buf_11[ss_cnt];
-   ym1 <= conv_buf_12[ss_cnt];
-   xd1 <= conv_buf_21[ss_cnt];
-   yd1 <= conv_buf_22[ss_cnt];
-   if (adc_rstn_i == 1'b0) begin
-
-      adc_a_score   <= 32'h0 ;
-      adc_b_score   <= 32'h0 ;
-
-      adc_a_score_up <= 32'h0 ;
-      adc_b_score_up <= 32'h0 ;
-
-      adc_a_score_up_2 <= 32'h0 ;
-      adc_b_score_up_2 <= 32'h0 ;
-
-      t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0;
-   end
-   else if (adc_we && adc_dv && ss_mode) begin
+   
+   if (adc_we && adc_dv && ss_mode) begin
       if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
       begin
         t1 <= 1'b1;
+
+        xm <= xm1;
+        ym <= ym1;
+        xd <= xd1;
+        yd <= yd1;
+        xm1 <= conv_buf_11[ss_cnt_1];
+        ym1 <= conv_buf_12[ss_cnt_2];
+        xd1 <= conv_buf_21[ss_cnt_3];
+        yd1 <= conv_buf_22[ss_cnt_4];
+
         adc_a_score_up <= ($signed(adc_a_dat)-$signed(xm))  ;
         adc_b_score_up <= ($signed(adc_b_dat)-$signed(ym))  ;
         adc_a_score_up_2 <= adc_a_score_up * $signed(xd) ;

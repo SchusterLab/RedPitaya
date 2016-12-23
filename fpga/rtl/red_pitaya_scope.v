@@ -357,8 +357,6 @@ always @(posedge adc_clk_i) begin
 end
 
 always @(posedge adc_clk_i) begin
-   adc_a_buf_tmp <= adc_a_buf[adc_wp_a[RSZ-1:0]];
-   adc_b_buf_tmp <= adc_b_buf[adc_wp_b[RSZ-1:0]];
    xm <= xm1;
    ym <= ym1;
    xd <= xd1;
@@ -419,6 +417,9 @@ always @(posedge adc_clk_i) begin
    // end 
    else if (adc_we && adc_dv && avg_mode) begin
       t4 <= 1'b1;
+      adc_a_buf_tmp <= adc_a_buf[adc_wp_a[RSZ-1:0]];
+      adc_b_buf_tmp <= adc_b_buf[adc_wp_b[RSZ-1:0]];
+
       adc_a_buf[adc_wp_cur_a[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
       adc_b_buf[adc_wp_cur_b[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
    end

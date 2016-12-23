@@ -357,28 +357,16 @@ always @(posedge adc_clk_i) begin
 end
 
 always @(posedge adc_clk_i) begin
-   xm <= xm1;
-   ym <= ym1;
-   xd <= xd1;
-   yd <= yd1;
-   xm1 <= conv_buf_11[ss_cnt];
-   ym1 <= conv_buf_12[ss_cnt];
-   xd1 <= conv_buf_21[ss_cnt];
-   yd1 <= conv_buf_22[ss_cnt];
-   if (adc_rstn_i == 1'b0) begin
-
-      adc_a_score   <= 32'h0 ;
-      adc_b_score   <= 32'h0 ;
-
-      adc_a_score_up <= 32'h0 ;
-      adc_b_score_up <= 32'h0 ;
-
-      adc_a_score_up_2 <= 32'h0 ;
-      adc_b_score_up_2 <= 32'h0 ;
-
-      t1 <= 1'b0; t2 <= 1'b0; t3 <= 1'b0; t4 <= 1'b0;
-   end
-   else if (adc_we && adc_dv && ss_mode) begin
+   
+   if (adc_we && adc_dv && ss_mode) begin
+      xm <= xm1;
+      ym <= ym1;
+      xd <= xd1;
+      yd <= yd1;
+      xm1 <= conv_buf_11[ss_cnt];
+      ym1 <= conv_buf_12[ss_cnt];
+      xd1 <= conv_buf_21[ss_cnt];
+      yd1 <= conv_buf_22[ss_cnt];
       if ((ss_cnt > win_start) && (ss_cnt < win_stop)) 
       begin
         t1 <= 1'b1;

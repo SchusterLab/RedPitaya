@@ -206,6 +206,8 @@ reg               adc_trig      ;   //adc trigger bit (set from trigger code bel
 
 reg   [  32-1: 0] adc_wp_trig   ;   //write pointer at when triggered
 reg   [  32-1: 0] adc_wp_cur    ;   //Current write pointer
+reg   [  32-1: 0] adc_wp_a    ;   //write pointer
+reg   [  32-1: 0] adc_wp_b    ;   //write pointer
 reg   [  32-1: 0] adc_wp_cur_a    ;   //Current write pointer
 reg   [  32-1: 0] adc_wp_cur_b    ;   //Current write pointer
 reg   [  32-1: 0] set_dly       ;   //delay count (# of samples from bus)
@@ -247,6 +249,8 @@ always @(posedge adc_clk_i) begin
       adc_we      <=  1'b0      ;
       adc_wp_trig <= 32'h0      ;
       adc_wp_cur  <= 32'h0      ;
+      adc_wp_a  <= 32'h0      ;
+      adc_wp_b  <= 32'h0      ;
       adc_wp_cur_a  <= 32'h0      ;
       adc_wp_cur_b  <= 32'h0      ;
       adc_we_cnt  <= 32'h0      ;
@@ -312,15 +316,26 @@ always @(posedge adc_clk_i) begin
       else if (adc_we && adc_dv )
          adc_wp_cur <= adc_wp ;             // save current write pointer
 
+
+      if (adc_rst_do || !adc_we)
+         adc_wp_a <= 32'h0;
+      else if (adc_we && adc_dv )
+         adc_wp_a <= adc_wp ;
+
+      if (adc_rst_do || !adc_we)
+         adc_wp_b <= 32'h0;
+      else if (adc_we && adc_dv )
+         adc_wp_b <= adc_wp ;
+
       if (adc_rst_do || !adc_we)
          adc_wp_cur_a <= 32'h0;
       else if (adc_we && adc_dv )
-         adc_wp_cur_a <= adc_wp ;
+         adc_wp_cur_a <= adc_wp_cur ;
 
       if (adc_rst_do || !adc_we)
          adc_wp_cur_b <= 32'h0;
       else if (adc_we && adc_dv )
-         adc_wp_cur_b <= adc_wp ;
+         adc_wp_cur_b <= adc_wp_cur ;
 
       if (adc_trig)
          adc_dly_do  <= 1'b1 ;
@@ -342,8 +357,8 @@ always @(posedge adc_clk_i) begin
 end
 
 always @(posedge adc_clk_i) begin
-   adc_a_buf_tmp <= adc_a_buf[adc_wp[RSZ-1:0]];
-   adc_b_buf_tmp <= adc_b_buf[adc_wp[RSZ-1:0]];
+   adc_a_buf_tmp <= adc_a_buf[adc_wp_a[RSZ-1:0]];
+   adc_b_buf_tmp <= adc_b_buf[adc_wp_b[RSZ-1:0]];
    xm <= xm1;
    ym <= ym1;
    xd <= xd1;
@@ -947,7 +962,7 @@ end else begin
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd55                              ; end   //Version
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd56                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

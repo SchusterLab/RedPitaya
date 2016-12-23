@@ -206,6 +206,8 @@ reg               adc_trig      ;   //adc trigger bit (set from trigger code bel
 
 reg   [  32-1: 0] adc_wp_trig   ;   //write pointer at when triggered
 reg   [  32-1: 0] adc_wp_cur    ;   //Current write pointer
+reg   [  32-1: 0] adc_wp_cur_a    ;   //Current write pointer
+reg   [  32-1: 0] adc_wp_cur_b    ;   //Current write pointer
 reg   [  32-1: 0] set_dly       ;   //delay count (# of samples from bus)
 reg   [  32-1: 0] adc_we_cnt    ;   //counter of how many samples written before trigger
 reg   [  32-1: 0] adc_dly_cnt   ;   //counter which counts from set_dly to 0
@@ -245,6 +247,8 @@ always @(posedge adc_clk_i) begin
       adc_we      <=  1'b0      ;
       adc_wp_trig <= 32'h0      ;
       adc_wp_cur  <= 32'h0      ;
+      adc_wp_cur_a  <= 32'h0      ;
+      adc_wp_cur_b  <= 32'h0      ;
       adc_we_cnt  <= 32'h0      ;
       adc_dly_cnt <= 32'h0      ;
       adc_dly_do  <=  1'b0      ;
@@ -308,6 +312,15 @@ always @(posedge adc_clk_i) begin
       else if (adc_we && adc_dv )
          adc_wp_cur <= adc_wp ;             // save current write pointer
 
+      if (adc_rst_do || !adc_we)
+         adc_wp_cur_a <= 32'h0;
+      else if (adc_we && adc_dv )
+         adc_wp_cur_a <= adc_wp ;
+
+      if (adc_rst_do || !adc_we)
+         adc_wp_cur_b <= 32'h0;
+      else if (adc_we && adc_dv )
+         adc_wp_cur_b <= adc_wp ;
 
       if (adc_trig)
          adc_dly_do  <= 1'b1 ;
@@ -377,8 +390,8 @@ always @(posedge adc_clk_i) begin
       else if (ss_cnt == win_stop) 
       begin
         t2 <= 1'b1;  
-        adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_score);
-        adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_score);
+        adc_a_buf[adc_wp_cur_a[RSZ-1:0]] <= $signed(adc_a_score);
+        adc_b_buf[adc_wp_cur_b[RSZ-1:0]] <= $signed(adc_b_score);
 
         adc_a_score   <= 32'h0 ;
         adc_b_score   <= 32'h0 ;
@@ -391,8 +404,8 @@ always @(posedge adc_clk_i) begin
    // end 
    else if (adc_we && adc_dv && avg_mode) begin
       t4 <= 1'b1;
-      adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
-      adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
+      adc_a_buf[adc_wp_cur_a[RSZ-1:0]] <= $signed(adc_a_buf_tmp) + $signed(adc_a_dat);
+      adc_b_buf[adc_wp_cur_b[RSZ-1:0]] <= $signed(adc_b_buf_tmp) + $signed(adc_b_dat);
    end
 end
 

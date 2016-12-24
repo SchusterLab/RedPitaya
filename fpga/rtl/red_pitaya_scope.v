@@ -376,16 +376,6 @@ always @(posedge adc_clk_i) begin
         adc_b_score_up_2 <= adc_b_score_up * $signed(yd) ;
         adc_a_score <= $signed(adc_a_score) + adc_a_score_up_2;
         adc_b_score <= $signed(adc_b_score) + adc_b_score_up_2;
-        // if (ss_2ch)
-        // begin
-        //   adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd);
-        //   adc_b_score <= $signed(adc_b_score) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
-        // end
-        // else 
-        // begin
-        //   adc_a_score <= $signed(adc_a_score) + ($signed(adc_a_dat)-$signed(xm)) * $signed(xd) + ($signed(adc_b_dat)-$signed(ym)) * $signed(yd);
-        //   adc_b_score <= $signed(adc_b_score) + $signed(adc_a_dat) ;;
-        // end
                     
       end
       else if (ss_cnt == win_stop) 

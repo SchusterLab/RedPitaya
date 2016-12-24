@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Fri Dec 23 14:10:27 2016
+| Date             : Fri Dec 23 18:04:02 2016
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : 
 | Design           : red_pitaya_top
@@ -50,14 +50,14 @@ Table of Contents
 | On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
 +-------------------------+-----------+----------+-----------+-----------------+
 | Clocks                  |     0.016 |       13 |       --- |             --- |
-| Slice Logic             |     0.011 |     7287 |       --- |             --- |
-|   LUT as Logic          |     0.010 |     2747 |     17600 |           15.61 |
+| Slice Logic             |     0.011 |     7295 |       --- |             --- |
+|   LUT as Logic          |     0.009 |     2749 |     17600 |           15.62 |
 |   CARRY4                |     0.001 |      305 |      4400 |            6.93 |
-|   Register              |    <0.001 |     3075 |     35200 |            8.74 |
-|   F7/F8 Muxes           |    <0.001 |       16 |     17600 |            0.09 |
+|   Register              |    <0.001 |     3076 |     35200 |            8.74 |
+|   F7/F8 Muxes           |    <0.001 |       11 |     17600 |            0.06 |
 |   LUT as Shift Register |    <0.001 |       63 |      6000 |            1.05 |
 |   Others                |     0.000 |      221 |       --- |             --- |
-| Signals                 |     0.018 |     6219 |       --- |             --- |
+| Signals                 |     0.018 |     6230 |       --- |             --- |
 | Block RAM               |     0.083 |       48 |        60 |           80.00 |
 | PLL                     |     0.097 |        1 |         2 |           50.00 |
 | DSPs                    |     0.011 |       14 |        80 |           17.50 |
@@ -178,8 +178,8 @@ Table of Contents
 |   i_iobufp[7]                                                                    |     0.000 |
 |   i_ps                                                                           |     1.248 |
 |     axi_slave_gp0                                                                |     0.002 |
-|     system_i                                                                     |     1.246 |
-|       system_i                                                                   |     1.246 |
+|     system_i                                                                     |     1.247 |
+|       system_i                                                                   |     1.247 |
 |         axi_protocol_converter_0                                                 |     0.003 |
 |           inst                                                                   |     0.003 |
 |             gen_axilite.gen_b2s_conv.axilite_b2s                                 |     0.003 |

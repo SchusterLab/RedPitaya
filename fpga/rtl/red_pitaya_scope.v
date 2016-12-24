@@ -398,11 +398,11 @@ always @(posedge adc_clk_i) begin
         adc_b_score   <= 32'h0 ;
       end
    end
-   // else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
-   //    t3 <= 1'b1;      
-   //    adc_a_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
-   //    adc_b_buf[adc_wp_cur[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
-   // end 
+   else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
+      t3 <= 1'b1;      
+      adc_a_buf[adc_wp_cur_a[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
+      adc_b_buf[adc_wp_cur_b[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
+   end 
    else if (adc_we && adc_dv && avg_mode) begin
       t4 <= 1'b1;
       adc_a_buf_tmp <= adc_a_buf[adc_wp_a[RSZ-1:0]];

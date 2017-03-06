@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Fri Dec 23 18:31:38 2016
+| Date             : Mon Mar  6 17:55:01 2017
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : 
 | Design           : red_pitaya_top
@@ -50,14 +50,14 @@ Table of Contents
 | On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
 +-------------------------+-----------+----------+-----------+-----------------+
 | Clocks                  |     0.022 |       13 |       --- |             --- |
-| Slice Logic             |     0.014 |     7309 |       --- |             --- |
-|   LUT as Logic          |     0.012 |     2848 |     17600 |           16.18 |
+| Slice Logic             |     0.014 |     7307 |       --- |             --- |
+|   LUT as Logic          |     0.012 |     2845 |     17600 |           16.16 |
 |   CARRY4                |     0.001 |      305 |      4400 |            6.93 |
 |   Register              |    <0.001 |     3080 |     35200 |            8.75 |
-|   F7/F8 Muxes           |    <0.001 |       12 |     17600 |            0.07 |
+|   F7/F8 Muxes           |    <0.001 |       15 |     17600 |            0.09 |
 |   LUT as Shift Register |    <0.001 |       63 |      6000 |            1.05 |
 |   Others                |     0.000 |      221 |       --- |             --- |
-| Signals                 |     0.023 |     6242 |       --- |             --- |
+| Signals                 |     0.022 |     6236 |       --- |             --- |
 | Block RAM               |     0.083 |       48 |        60 |           80.00 |
 | PLL                     |     0.097 |        1 |         2 |           50.00 |
 | DSPs                    |     0.011 |       14 |        80 |           17.50 |
@@ -201,7 +201,7 @@ Table of Contents
 |                 transaction_fifo_0                                               |    <0.001 |
 |               SI_REG                                                             |     0.003 |
 |                 ar_pipe                                                          |    <0.001 |
-|                 aw_pipe                                                          |    <0.001 |
+|                 aw_pipe                                                          |     0.001 |
 |                 axi_infrastructure_v1_1_0_axi2vector_0                           |     0.000 |
 |                 axi_infrastructure_v1_1_0_vector2axi_0                           |     0.000 |
 |                 b_pipe                                                           |    <0.001 |

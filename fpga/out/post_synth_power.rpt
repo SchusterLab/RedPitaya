@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Fri Dec 23 18:30:54 2016
+| Date             : Mon Mar  6 17:54:17 2017
 | Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
 | Command          : report_power -file out/post_synth_power.rpt
 | Design           : red_pitaya_top
@@ -50,15 +50,15 @@ Table of Contents
 | On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
 +-------------------------+-----------+----------+-----------+-----------------+
 | Clocks                  |     0.038 |       15 |       --- |             --- |
-| Slice Logic             |     0.017 |     7967 |       --- |             --- |
-|   LUT as Logic          |     0.014 |     3309 |     17600 |           18.80 |
+| Slice Logic             |     0.017 |     7965 |       --- |             --- |
+|   LUT as Logic          |     0.014 |     3305 |     17600 |           18.78 |
 |   CARRY4                |     0.002 |      305 |      4400 |            6.93 |
 |   Register              |    <0.001 |     3247 |     35200 |            9.22 |
-|   F7/F8 Muxes           |    <0.001 |       12 |     17600 |            0.07 |
+|   F7/F8 Muxes           |    <0.001 |       15 |     17600 |            0.09 |
 |   LUT as Shift Register |    <0.001 |       71 |      6000 |            1.18 |
 |   Others                |     0.000 |      242 |       --- |             --- |
 |   BUFG                  |     0.000 |        2 |        32 |            6.25 |
-| Signals                 |     0.022 |     7320 |       --- |             --- |
+| Signals                 |     0.022 |     7312 |       --- |             --- |
 | Block RAM               |     0.083 |       48 |        60 |           80.00 |
 | PLL                     |     0.097 |        1 |         2 |           50.00 |
 | DSPs                    |     0.011 |       14 |        80 |           17.50 |

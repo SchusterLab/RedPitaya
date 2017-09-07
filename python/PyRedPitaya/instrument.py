@@ -339,14 +339,14 @@ class Scope2(MemoryInterface):
     dac2_on_ch1 = GetSetBit(0x50, pos=0)
     dac1_on_ch2 = GetSetBit(0x50, pos=1)
 
-    hw_avgs = GetSetRegister(0xAC, UnsignedInteger(size=18))
+    hw_avgs = GetSetRegister(0xAC, UnsignedInteger(size=32))
     version = GetRegister(0xB0, UnsignedInteger(size=32))
     hw_avg_status = GetRegister(0xB4, UnsignedInteger(size=32))
     adc_trigged = GetSetBit(0xB4, pos=3)
     npt_mode = GetSetBit(0xB4, pos=2)
     avg_mode = GetSetBit(0xB4, pos=1)
     avg_do = GetSetBit(0xB4, pos=0)
-    avg_cnt = GetRegister(0xB8, UnsignedInteger(size=18))
+    avg_cnt = GetRegister(0xB8, UnsignedInteger(size=32))
 
     abc_a_score = GetRegister(0xBC, SignedInteger(size=32))
     abc_b_score = GetRegister(0xC0, SignedInteger(size=32))

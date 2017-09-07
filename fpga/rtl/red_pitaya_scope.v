@@ -216,7 +216,7 @@ wire              npt_mode      ;   //1 if No-PreTrigger mode 0 otherwise
 wire              avg_mode      ;   //1 if averaging mode
 reg               adc_avg_do    ;   //1 while averaging
 reg   [  32-1: 0] adc_avg_cnt   ;   //hw averaging counter
-reg   [  18-1: 0] set_avgs      ;   //total number of averages set by system bus
+reg   [  32-1: 0] set_avgs      ;   //total number of averages set by system bus
 
 reg               ss_mode,ss_2ch;   //1 if single shot mode
 reg   [ RSZ-1: 0] ss_cnt        ;   //Counter for single shot mode
@@ -224,8 +224,8 @@ reg   [ RSZ-1: 0] ss_cnt        ;   //Counter for single shot mode
 reg               adc_trigged   ;   //debugging to see if it started writing
 reg               t1,t2,t3,t4,t5;   //test bits to see if clauses were executed
 
-assign npt_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then must be in no pre-trigger mode
-assign avg_mode = (set_avgs != 18'h0); //If set_avgs is not 0 then averaging mode
+assign npt_mode = (set_avgs != 32'h0); //If set_avgs is not 0 then must be in no pre-trigger mode
+assign avg_mode = (set_avgs != 32'h0); //If set_avgs is not 0 then averaging mode
 
 
 reg  [ 32-1: 0]   adc_a_score, adc_b_score, adc_a_score_up, adc_b_score_up   ;
@@ -803,7 +803,7 @@ if (adc_rstn_i == 1'b0) begin
    set_a_tresh   <=  14'd5000   ;
    set_b_tresh   <= -14'd5000   ;
    set_dly       <=  32'd0      ;
-   set_avgs      <=  18'd0      ;
+   set_avgs      <=  32'd0      ;
    set_dec       <=  17'd1      ;
    set_a_hyst    <=  14'd20     ;
    set_b_hyst    <=  14'd20     ;
@@ -853,7 +853,7 @@ end else begin
       if (sys_addr[19:0]==20'h7C)   set_b_axi_en    <= sys_wdata[     0] ;
 
       if (sys_addr[19:0]==20'h90)   set_deb_len     <= sys_wdata[20-1:0] ;
-      if (sys_addr[19:0]==20'hAC)   set_avgs        <= sys_wdata[18-1:0] ;
+      if (sys_addr[19:0]==20'hAC)   set_avgs        <= sys_wdata[32-1:0] ;
 
       if (sys_addr[19:0]==20'hC4)   win_start       <= sys_wdata[RSZ-1:0] ;
       if (sys_addr[19:0]==20'hC8)   win_stop        <= sys_wdata[RSZ-1:0] ;
@@ -920,8 +920,8 @@ end else begin
 
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
-     20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd42                              ; end   //Version
+     20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= 				set_avgs            ; end
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd43                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,

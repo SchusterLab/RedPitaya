@@ -1,8 +1,13 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
+<<<<<<< HEAD
 | Date             : Thu Sep  7 14:02:53 2017
 | Host             : Fermium running 64-bit Ubuntu 16.04.2 LTS
+=======
+| Date             : Mon Mar  6 17:55:01 2017
+| Host             : Fermium running 64-bit Ubuntu 14.04.5 LTS
+>>>>>>> origin/master
 | Command          : 
 | Design           : red_pitaya_top
 | Device           : xc7z010clg400-1
@@ -30,12 +35,21 @@ Table of Contents
 ----------
 
 +--------------------------+-------+
+<<<<<<< HEAD
 | Total On-Chip Power (W)  | 2.161 |
 | Dynamic (W)              | 2.009 |
 | Device Static (W)        | 0.152 |
 | Effective TJA (C/W)      | 11.5  |
 | Max Ambient (C)          | 60.1  |
 | Junction Temperature (C) | 49.9  |
+=======
+| Total On-Chip Power (W)  | 1.721 |
+| Dynamic (W)              | 1.580 |
+| Device Static (W)        | 0.142 |
+| Effective TJA (C/W)      | 11.5  |
+| Max Ambient (C)          | 65.1  |
+| Junction Temperature (C) | 44.9  |
+>>>>>>> origin/master
 | Confidence Level         | Low   |
 | Setting File             | ---   |
 | Simulation Activity File | ---   |
@@ -46,6 +60,7 @@ Table of Contents
 1.1 On-Chip Components
 ----------------------
 
+<<<<<<< HEAD
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
@@ -68,6 +83,29 @@ Table of Contents
 | Static Power             |     0.152 |          |           |                 |
 | Total                    |     2.161 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
+=======
++-------------------------+-----------+----------+-----------+-----------------+
+| On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
++-------------------------+-----------+----------+-----------+-----------------+
+| Clocks                  |     0.022 |       13 |       --- |             --- |
+| Slice Logic             |     0.014 |     7307 |       --- |             --- |
+|   LUT as Logic          |     0.012 |     2845 |     17600 |           16.16 |
+|   CARRY4                |     0.001 |      305 |      4400 |            6.93 |
+|   Register              |    <0.001 |     3080 |     35200 |            8.75 |
+|   F7/F8 Muxes           |    <0.001 |       15 |     17600 |            0.09 |
+|   LUT as Shift Register |    <0.001 |       63 |      6000 |            1.05 |
+|   Others                |     0.000 |      221 |       --- |             --- |
+| Signals                 |     0.022 |     6236 |       --- |             --- |
+| Block RAM               |     0.083 |       48 |        60 |           80.00 |
+| PLL                     |     0.097 |        1 |         2 |           50.00 |
+| DSPs                    |     0.011 |       14 |        80 |           17.50 |
+| I/O                     |     0.082 |       89 |       100 |           89.00 |
+| XADC                    |     0.004 |        1 |       --- |             --- |
+| PS7                     |     1.244 |        1 |       --- |             --- |
+| Static Power            |     0.142 |          |           |                 |
+| Total                   |     1.721 |          |           |                 |
++-------------------------+-----------+----------+-----------+-----------------+
+>>>>>>> origin/master
 
 
 1.2 Power Supply Summary
@@ -76,22 +114,36 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
+<<<<<<< HEAD
 | Vccint    |       1.000 |     0.331 |       0.320 |      0.011 |
 | Vccaux    |       1.800 |     0.069 |       0.057 |      0.012 |
 | Vcco33    |       3.300 |     0.085 |       0.084 |      0.001 |
+=======
+| Vccint    |       1.000 |     0.160 |       0.151 |      0.009 |
+| Vccaux    |       1.800 |     0.065 |       0.054 |      0.012 |
+| Vcco33    |       3.300 |     0.025 |       0.024 |      0.001 |
+>>>>>>> origin/master
 | Vcco25    |       2.500 |     0.001 |       0.000 |      0.001 |
-| Vcco18    |       1.800 |     0.002 |       0.001 |      0.001 |
+| Vcco18    |       1.800 |     0.001 |       0.000 |      0.001 |
 | Vcco15    |       1.500 |     0.001 |       0.000 |      0.001 |
 | Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |
 | Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |
 | Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |
+<<<<<<< HEAD
 | Vccbram   |       1.000 |     0.020 |       0.014 |      0.005 |
 | MGTAVcc   |       1.000 |     0.000 |       0.000 |      0.000 |
 | MGTAVtt   |       1.200 |     0.000 |       0.000 |      0.000 |
 | MGTVccaux |       1.800 |     0.000 |       0.000 |      0.000 |
 | Vccpint   |       1.000 |     0.714 |       0.678 |      0.036 |
+=======
+| Vccbram   |       1.000 |     0.010 |       0.007 |      0.004 |
+| MGTAVcc   |       1.000 |     0.000 |       0.000 |      0.000 |
+| MGTAVtt   |       1.200 |     0.000 |       0.000 |      0.000 |
+| MGTVccaux |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccpint   |       1.000 |     0.662 |       0.632 |      0.030 |
+>>>>>>> origin/master
 | Vccpaux   |       1.800 |     0.038 |       0.027 |      0.010 |
-| Vccpll    |       1.800 |     0.017 |       0.014 |      0.003 |
+| Vccpll    |       1.800 |     0.016 |       0.013 |      0.003 |
 | Vcco_ddr  |       1.500 |     0.356 |       0.354 |      0.002 |
 | Vcco_mio0 |       3.300 |     0.002 |       0.001 |      0.001 |
 | Vcco_mio1 |       2.500 |     0.003 |       0.002 |      0.001 |
@@ -146,7 +198,6 @@ Table of Contents
 | pll_dac_clk_1x | pll/clk_dac_1x                                                        |             8.0 |
 | pll_dac_clk_2p | pll/clk_dac_2p                                                        |             4.0 |
 | pll_dac_clk_2x | pll/clk_dac_2x                                                        |             4.0 |
-| pll_pwm_clk    | pll/clk_pwm                                                           |             4.0 |
 | rx_clk         | daisy_p_i[1]                                                          |             4.0 |
 +----------------+-----------------------------------------------------------------------+-----------------+
 
@@ -160,6 +211,7 @@ Table of Contents
 +----------------------------------------------------------------------------------+-----------+
 | Name                                                                             | Power (W) |
 +----------------------------------------------------------------------------------+-----------+
+<<<<<<< HEAD
 | red_pitaya_top                                                                   |     2.009 |
 |   i_ams                                                                          |    <0.001 |
 |   i_asg                                                                          |     0.079 |
@@ -225,12 +277,33 @@ Table of Contents
 |       axi_wfifo_reg_0_15_66_71                                                   |    <0.001 |
 |       axi_wfifo_reg_0_15_6_11                                                    |    <0.001 |
 |       axi_wfifo_reg_0_15_72_72                                                   |    <0.001 |
+=======
+| red_pitaya_top                                                                   |     1.580 |
+|   i_hk                                                                           |     0.001 |
+|   i_iobufn[0]                                                                    |     0.000 |
+|   i_iobufn[1]                                                                    |     0.000 |
+|   i_iobufn[2]                                                                    |     0.000 |
+|   i_iobufn[3]                                                                    |     0.000 |
+|   i_iobufn[4]                                                                    |     0.000 |
+|   i_iobufn[5]                                                                    |     0.000 |
+|   i_iobufn[6]                                                                    |     0.000 |
+|   i_iobufn[7]                                                                    |     0.000 |
+|   i_iobufp[0]                                                                    |     0.000 |
+|   i_iobufp[1]                                                                    |     0.000 |
+|   i_iobufp[2]                                                                    |     0.000 |
+|   i_iobufp[3]                                                                    |     0.000 |
+|   i_iobufp[4]                                                                    |     0.000 |
+|   i_iobufp[5]                                                                    |     0.000 |
+|   i_iobufp[6]                                                                    |     0.000 |
+|   i_iobufp[7]                                                                    |     0.000 |
+|   i_ps                                                                           |     1.267 |
+>>>>>>> origin/master
 |     axi_slave_gp0                                                                |     0.002 |
-|     system_i                                                                     |     1.313 |
-|       system_i                                                                   |     1.313 |
-|         axi_protocol_converter_0                                                 |     0.011 |
-|           inst                                                                   |     0.011 |
-|             gen_axilite.gen_b2s_conv.axilite_b2s                                 |     0.011 |
+|     system_i                                                                     |     1.265 |
+|       system_i                                                                   |     1.265 |
+|         axi_protocol_converter_0                                                 |     0.012 |
+|           inst                                                                   |     0.012 |
+|             gen_axilite.gen_b2s_conv.axilite_b2s                                 |     0.012 |
 |               MI_REG                                                             |     0.000 |
 |                 ar_pipe                                                          |     0.000 |
 |                 aw_pipe                                                          |     0.000 |
@@ -249,7 +322,7 @@ Table of Contents
 |                 transaction_fifo_0                                               |    <0.001 |
 |               SI_REG                                                             |     0.003 |
 |                 ar_pipe                                                          |    <0.001 |
-|                 aw_pipe                                                          |    <0.001 |
+|                 aw_pipe                                                          |     0.001 |
 |                 axi_infrastructure_v1_1_0_axi2vector_0                           |     0.000 |
 |                 axi_infrastructure_v1_1_0_vector2axi_0                           |     0.000 |
 |                 b_pipe                                                           |    <0.001 |
@@ -269,8 +342,8 @@ Table of Contents
 |               ACTIVE_LOW_EXT.ACT_LO_EXT                                          |    <0.001 |
 |             SEQ                                                                  |    <0.001 |
 |               SEQ_COUNTER                                                        |    <0.001 |
-|         processing_system7                                                       |     1.293 |
-|           inst                                                                   |     1.293 |
+|         processing_system7                                                       |     1.245 |
+|           inst                                                                   |     1.245 |
 |             xlnx_axi_wrshim_unwrap_inst_gp0                                      |     0.000 |
 |             xlnx_axi_wrshim_unwrap_inst_gp1                                      |     0.000 |
 |         xadc                                                                     |     0.008 |
@@ -308,6 +381,7 @@ Table of Contents
 |             AXI_XADC_CORE_I                                                      |     0.005 |
 |             INTR_CTRLR_GEN_I.INTERRUPT_CONTROL_I                                 |    <0.001 |
 |             SOFT_RESET_I                                                         |    <0.001 |
+<<<<<<< HEAD
 |   i_scope                                                                        |     0.213 |
 |     conv_buf_22_reg_0_127_0_0                                                    |    <0.001 |
 |     conv_buf_22_reg_0_127_10_10                                                  |    <0.001 |
@@ -1333,15 +1407,21 @@ Table of Contents
 |     conv_buf_22_reg_896_1023_7_7                                                 |    <0.001 |
 |     conv_buf_22_reg_896_1023_8_8                                                 |    <0.001 |
 |     conv_buf_22_reg_896_1023_9_9                                                 |    <0.001 |
+=======
+|   i_scope                                                                        |     0.129 |
+>>>>>>> origin/master
 |     i_dfilt1_cha                                                                 |     0.009 |
-|     i_dfilt1_chb                                                                 |     0.009 |
-|     i_wr0                                                                        |     0.005 |
-|     i_wr1                                                                        |     0.005 |
+|     i_dfilt1_chb                                                                 |     0.008 |
+|     i_wr0                                                                        |     0.002 |
+|     i_wr1                                                                        |     0.002 |
 |   pll                                                                            |     0.097 |
+<<<<<<< HEAD
 |   pwm[0]                                                                         |     0.002 |
 |   pwm[1]                                                                         |     0.002 |
 |   pwm[2]                                                                         |     0.002 |
 |   pwm[3]                                                                         |     0.002 |
+=======
+>>>>>>> origin/master
 +----------------------------------------------------------------------------------+-----------+
 
 

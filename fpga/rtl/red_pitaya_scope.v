@@ -256,7 +256,7 @@ always @(posedge adc_clk_i) begin
       adc_we_cnt  <= 32'h0      ;
       adc_dly_cnt <= 32'h0      ;
       adc_dly_do  <=  1'b0      ;
-      adc_avg_cnt <= 18'h0      ;
+      adc_avg_cnt <= 32'h0      ;
       adc_avg_do  <=  1'b0      ;
 
       adc_trigged <=  1'b0      ;
@@ -388,7 +388,7 @@ always @(posedge adc_clk_i) begin
         adc_b_score   <= 32'h0 ;
       end
    end
-   else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 18'd0))) begin
+   else if (adc_we && adc_dv && (!avg_mode || (adc_avg_cnt == 32'd0))) begin
       t3 <= 1'b1;      
       adc_a_buf[adc_wp_cur_a[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_a_dat) ;
       adc_b_buf[adc_wp_cur_b[RSZ-1:0]] <= $signed(32'd0)+$signed(adc_b_dat) ;
@@ -940,13 +940,8 @@ end else begin
 
      20'h00090 : begin sys_ack <= sys_en;          sys_rdata <= {{32-20{1'b0}}, set_deb_len}        ; end
 
-<<<<<<< HEAD
-     20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= 				set_avgs            ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd43                              ; end   //Version
-=======
      20'h000AC : begin sys_ack <= sys_en;          sys_rdata <= {{32-18{1'b0}}, set_avgs}           ; end
-     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd58                              ; end   //Version
->>>>>>> origin/master
+     20'h000B0 : begin sys_ack <= sys_en;          sys_rdata <= 32'd59                              ; end   //Version
      20'h000B4 : begin sys_ack <= sys_en;          sys_rdata <= {{32-9{1'b0}},  t5,t4,t3,t2,t1,
                                                                                 adc_trigged,
                                                                                 npt_mode,
